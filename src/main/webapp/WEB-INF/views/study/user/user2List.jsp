@@ -10,6 +10,16 @@
   <script>
   	'use strict';
   	
+    $(function() {
+    	$("#fNewFormCloseBtn").hide();
+    });
+  	
+    function fNewFormClose() {
+    	//$("#fNewFormBtn").show();
+    	//$("#fNewFormCloseBtn").hide();
+    	location.reload();
+    }
+  	
   	function userUpdate(idx, name, age, address) {
   		$("#myModal .modal-body #idx").val(idx);
   		$("#myModal .modal-body #name").val(name);
@@ -29,6 +39,9 @@
 		}
   	
   	function fNewForm() {
+  		$("#fNewFormBtn").hide();
+    	$("#fNewFormCloseBtn").show();
+  		
 			let str = '';
 			str += '<form method="post">';
 			str += '<div>';
@@ -50,13 +63,15 @@
 <div class="container">
   <h2>회원리스트2</h2>
   <div class="row mt-4">
-  	<div class="col">
-  		<input type="button" value="회원추가" onclick="fNewForm()" class="btn btn-primary btn-sm" />
+  	<div class="col-7">
+  		<input type="button" value="회원가입" onclick="fNewForm()" id="fNewFormBtn" class="btn btn-warning btn-sm mb-2"/>
+      <input type="button" value="닫기" onclick="fNewFormClose()" id="fNewFormCloseBtn" class="btn btn-warning btn-sm mb-2"/>
   	</div>
-  	<div class="col text-right">
-	  	이름검색 : 
-	  	<input type="text" name="name" value="${name}" id="name" />
-	  	<input type="button" value="검색" onclick="nameSearch()" class="btn btn-primary btn-sm" />
+  	<div class="col-5 text-right">
+	  	<div class="input-group">
+	      <input type="text" name="name" id="name" value="${name}" class="form-control mb-2">
+	      <div class="input-group-append"><input type="button" value="이름검색" onclick="nameSearch()" class="btn btn-warning btn-sm mb-2"/></div>
+	    </div>
   	</div>
   </div>
   <div id="demo"></div>
@@ -84,7 +99,7 @@
   	</c:forEach>
   	<tr><td colspan="6" class="m-0, p-0"></td></tr>
   </table>
-  <div><a href="${ctp}/" class="btn btn-primary btn-sm">돌아가기</a></div>
+  <div><a href="${ctp}/" class="btn btn-warning btn-sm">돌아가기</a></div>
 </div>
 
 <!-- The Modal -->

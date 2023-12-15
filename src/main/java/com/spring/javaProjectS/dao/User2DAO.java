@@ -16,6 +16,10 @@ public interface User2DAO {
 
 	public int setUser2Input(@Param("vo") UserVO vo);
 
-	public int setUser2Update(@Param("vo") UserVO vo); 
+	public int setUser2Update(@Param("vo") UserVO vo);
+
+	public UserVO getUserSearchVO(@Param("mid") String mid);
+
+	public List<UserVO> getUserSearchVOS(@Param("mid") String mid); 
 
 }

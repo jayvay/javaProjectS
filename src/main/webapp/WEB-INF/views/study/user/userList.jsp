@@ -31,7 +31,7 @@
   <div>
   	개별검색 : 
   	<input type="text" name="name" id="name" />
-  	<input type="button" value="검색" onclick="nameSearch()" class="btn btn-primary btn-sm" />
+  	<input type="button" value="검색" onclick="nameSearch()" class="btn btn-warning btn-sm" />
   </div>
   <table class="table table-hover mt-2">
   	<tr class="table-dark text-dark">
@@ -54,7 +54,7 @@
   	</c:forEach>
   	<tr><td colspan="6" class="m-0, p-0"></td></tr>
   </table>
-  <div><a href="${ctp}/" class="btn btn-primary">돌아가기</a></div>
+  <div><a href="${ctp}/" class="btn btn-warning">돌아가기</a></div>
 </div>
 <p><br/></p>
 <jsp:include page="/WEB-INF/views/include/footer.jsp" />

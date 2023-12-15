@@ -17,3 +17,5 @@ insert into user values (default, 'samdal', '조삼달', 33, '제주');
 insert into user values (default, 'yongyong', '조용필', 33, '제주');
 
 select * from user where name like concat('%', ,'%') order by idx desc;
+
+select * from guest order by idx desc;
