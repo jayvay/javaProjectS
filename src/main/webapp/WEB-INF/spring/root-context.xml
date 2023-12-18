@@ -35,4 +35,21 @@
 	<!-- 가공 처리할 SessionFactory 객체에 mapper의 정보를 주입하기 위한 DAO 객체의 위치를 설정 -->
 	<mybatis-spring:scan base-package="com.spring.javaProjectS.dao"/>
 	
+	<!-- 메일 처리를 위한 Bean 등록하기 -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="cccbbbsss1126@gmail.com" />	<!-- 보내는 사람 -->
+		<property name="password" value="sehfqrgytwufqtoe" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+				<prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+				<prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
+			</props>
+		</property>
+	</bean>
+	
 </beans>

@@ -7,9 +7,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Home</title>
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
 <style>
 	body {font-family: "Lato", sans-serif}
 	.mySlides {display: none}
@@ -19,7 +17,6 @@
 <jsp:include page="/WEB-INF/views/include/nav.jsp" />	<!-- 메뉴 -->
 <!-- Page content -->
 <div class="w3-content" style="max-width:2000px;margin-top:46px">
-
 <jsp:include page="/WEB-INF/views/include/slide.jsp" />	<!-- Slide Show -->
 
    <!-- The Band Section -->

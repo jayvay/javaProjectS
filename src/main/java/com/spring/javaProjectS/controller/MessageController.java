@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MessageController {
 
 	@RequestMapping(value = "/message/{msgFlag}", method = RequestMethod.GET)
-	public String msgGet(Model model, @PathVariable String msgFlag) {
+	public String msgGet(Model model, @PathVariable String msgFlag, String mid) {
 
 		if(msgFlag.equals("userDeleteOk")) {
 			model.addAttribute("msg", "유저가 삭제되었습니다.");
@@ -72,6 +72,34 @@ public class MessageController {
 		else if(msgFlag.equals("adminLogoutOk")) {
 			model.addAttribute("msg", "관리자 로그아웃 되었습니다.");
 			model.addAttribute("url", "guest/guestList");
+		}
+		else if(msgFlag.equals("mailSendOk")) {
+			model.addAttribute("msg", "메일이 성공적으로 전송되었습니다.");
+			model.addAttribute("url", "study/mail/mailForm");
+		}
+		else if(msgFlag.equals("loginOk")) {
+			model.addAttribute("msg", mid + " 님, 다시 만나 반갑습니다.");
+			model.addAttribute("url", "member/memberMain");
+		}
+		else if(msgFlag.equals("loginNo")) {
+			model.addAttribute("msg", "로그인이 실패하였습니다.");
+			model.addAttribute("url", "member/login");
+		}
+		else if(msgFlag.equals("logoutOk")) {
+			model.addAttribute("msg", mid + " 님, 또 만나요!");
+			model.addAttribute("url", "member/login");
+		}
+		else if(msgFlag.equals("joinOk")) {
+			model.addAttribute("msg", "회원가입 완료, 환영합니다!");
+			model.addAttribute("url", "member/login");
+		}
+		else if(msgFlag.equals("joinNo")) {
+			model.addAttribute("msg", "회원가입이 실패하였습니다.");
+			model.addAttribute("url", "member/join");
+		}
+		else if(msgFlag.equals("idCheckNo")) {
+			model.addAttribute("msg", "이미 사용 중인 아이디입니다.");
+			model.addAttribute("url", "member/join");
 		}
 		
 		return "include/message";
