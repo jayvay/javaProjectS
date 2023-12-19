@@ -29,10 +29,12 @@
 		    <div class="w3-dropdown-content w3-bar-block w3-card-4">
 		      <a href="${ctp}/user/userList" class="w3-bar-item w3-button">일정관리</a>
 		      <a href="${ctp}/user2/user2List" class="w3-bar-item w3-button">회원리스트</a>
-		      <a href="#" class="w3-bar-item w3-button">비밀번호변경</a>
+		      <a href="${ctp}/member/memberPwdCheck/p" class="w3-bar-item w3-button">비밀번호변경</a>
 		      <a href="#" class="w3-bar-item w3-button">회원정보수정</a>
 		      <a href="#" class="w3-bar-item w3-button">회원탈퇴</a>
-		      <a href="#" class="w3-bar-item w3-button">관리자</a>
+		      <c:if test="${sLevel == 0}">
+		      	<a href="#" class="w3-bar-item w3-button">관리자</a>
+		      </c:if>
 	    	</div>
 	  	</div>
 	  </c:if>	
@@ -83,3 +85,23 @@
 		<a href="${ctp}/member/logout" class="w3-bar-item w3-button w3-padding-large">Logout</a>
   </c:if>
 </div>
+<script>
+
+	// Used to toggle the menu on small screens when clicking on the menu button
+	function myFunction() {
+	  var x = document.getElementById("navDemo");
+	  if (x.className.indexOf("w3-show") == -1) {
+	    x.className += " w3-show";
+	  } else { 
+	    x.className = x.className.replace(" w3-show", "");
+	  }
+	}
+	
+	// When the user clicks anywhere outside of the modal, close it
+	var modal = document.getElementById('ticketModal');
+	window.onclick = function(event) {
+	  if (event.target == modal) {
+	    modal.style.display = "none";
+	  }
+	}
+</script>

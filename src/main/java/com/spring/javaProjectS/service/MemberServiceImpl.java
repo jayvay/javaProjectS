@@ -29,4 +29,14 @@ public class MemberServiceImpl implements MemberService {
 		
 		return memberDAO.setMemberJoin(vo);
 	}
+	
+	@Override
+	public int setPwdChangeOk(String mid, String pwd) {
+		return memberDAO.setPwdChangeOk(mid, pwd);
+	}
+
+	@Override
+	public void setMemberPwdUpdate(String mid, String imsiPwd) {
+		memberDAO.setMemberPwdUpdate(mid, imsiPwd);
+	}
 }

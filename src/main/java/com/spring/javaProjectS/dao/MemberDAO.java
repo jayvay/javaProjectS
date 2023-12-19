@@ -12,4 +12,8 @@ public interface MemberDAO {
 
 	public int setMemberJoin(@Param("vo") MemberVO vo);
 
+	public void setMemberPwdUpdate(@Param("mid") String mid, @Param("imsiPwd") String imsiPwd);
+
+	public int setPwdChangeOk(@Param("mid") String mid, @Param("pwd") String pwd);
+
 }

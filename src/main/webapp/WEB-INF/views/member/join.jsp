@@ -28,17 +28,17 @@
       let regURL = /^(https?:\/\/)?([a-z\d\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?$/;
     	let regTel = /\d{2,3}-\d{3,4}-\d{4}$/g;
     	
-    	let mid = myForm.mid.value.trim();
-    	let pwd = myForm.pwd.value;
-    	let nickName = myForm.nickName.value;
-    	let name = myForm.name.value;
-    	let email1 = myForm.email1.value.trim();
-    	let email2 = myForm.email2.value;
+    	let mid = myform.mid.value.trim();
+    	let pwd = myform.pwd.value;
+    	let nickName = myform.nickName.value;
+    	let name = myform.name.value;
+    	let email1 = myform.email1.value.trim();
+    	let email2 = myform.email2.value;
     	let email = email1 + "@" + email2;
-    	let homePage = myForm.homePage.value;
-    	let tel1 = myForm.tel1.value;
-    	let tel2 = myForm.tel2.value.trim();
-    	let tel3 = myForm.tel3.value.trim();
+    	let homePage = myform.homePage.value;
+    	let tel1 = myform.tel1.value;
+    	let tel2 = myform.tel2.value.trim();
+    	let tel3 = myform.tel3.value.trim();
     	let tel = tel1 + "-" + tel2 + "-" + tel3;
     	
     	let submitFlag = 0;		// 모든 체크가 정상으로 종료되게되면 submitFlag는 1로 변경처리될수 있게 한다.
@@ -47,33 +47,33 @@
     	// 앞의 정규식으로 정의된 부분에 대한 유효성체크
     	if(!regMid.test(mid)) {
     		alert("아이디는 4~20자리의 영문 소/대문자와 숫자, 언더바(_)만 사용가능합니다.");
-    		myForm.mid.focus();
+    		myform.mid.focus();
     		return false;
     	}
     	else if(!regPwd.test(pwd)) {
         alert("비밀번호는 1개이상의 문자와 특수문자 조합의 6~24 자리로 작성해주세요.");
-        myForm.pwd.focus();
+        myform.pwd.focus();
         return false;
       }
       else if(!regNickName.test(nickName)) {
         alert("닉네임은 한글만 사용가능합니다.");
-        myForm.nickName.focus();
+        myform.nickName.focus();
         return false;
       }
       else if(!regName.test(name)) {
         alert("성명은 한글과 영문대소문자만 사용가능합니다.");
-        myForm.name.focus();
+        myform.name.focus();
         return false;
       }
       else if(!regEmail.test(email)) {
         alert("이메일 형식에 맞지않습니다.");
-        myForm.email1.focus();
+        myform.email1.focus();
         return false;
       }
       else if((homePage != "http://" && homePage != "")) {
         if(!regURL.test(homePage)) {
 	        alert("작성하신 홈페이지 주소가 URL 형식에 맞지않습니다.");
-	        myForm.homePage.focus();
+	        myform.homePage.focus();
 	        return false;
         }
         else {
@@ -81,27 +81,10 @@
 	      }
       }
     	
-    	//사진 최대 용량과 확장자 제한
-  		let fName = document.getElementById("file").value;
-    	
-  		if(fName.trim() != "") {
-	  		let ext = fName.substring(fName.lastIndexOf(".")+1).toLowerCase();
-	  		let maxSize = 1024 * 1024 * 2;
-	  		let fileSize = document.getElementById("file").files[0].size;
-	  		
-	  		if(ext != 'jpg' && ext != 'gif' && ext != 'png') {
-	  			alert("사진은 jpg/gif/png 파일만 업로드 가능합니다.")
-	  		}
-	  		else if(fileSize > maxSize) {
-	  			alert("업로드 가능한 사진의 최대 용량은 2MByte 입니다.");
-	  		}
-	  		submitFlag = 1;
-  		}
-    	
     	if(tel2 != "" && tel3 != "") {
     	  if(!regTel.test(tel)) {
 	    		alert("전화번호형식을 확인하세요.(000-0000-0000)");
-	    		myForm.tel2.focus();
+	    		myform.tel2.focus();
 	    		return false;
     	  }
     	  else {
@@ -116,13 +99,30 @@
     	}
     	
     	// 전송전에 '주소'를 하나로 묶어서 전송처리 준비한다.
-    	let postcode = myForm.postcode.value + " ";
-    	let roadAddress = myForm.roadAddress.value + " ";
-    	let detailAddress = myForm.detailAddress.value + " ";
-    	let extraAddress = myForm.extraAddress.value + " ";
-  		myForm.address.value = postcode + "/" + roadAddress + "/" + detailAddress + "/" + extraAddress + "/";
+    	let postcode = myform.postcode.value + " ";
+    	let roadAddress = myform.roadAddress.value + " ";
+    	let detailAddress = myform.detailAddress.value + " ";
+    	let extraAddress = myform.extraAddress.value + " ";
+  		myform.address.value = postcode + "/" + roadAddress + "/" + detailAddress + "/" + extraAddress + "/";
     	
-  			
+  		// 전송전에 파일에 관한 사항들을 체크한다.
+  		let fName = document.getElementById("file").value;
+    	 
+    	if(fName.trim() != "") {
+	    	let ext = fName.substring(fName.lastIndexOf(".")+1).toLowerCase();
+	    	let maxSize = 1024 * 1024 * 5;
+	    	let fileSize = document.getElementById("file").files[0].size;
+	    	
+	    	if(ext != 'jpg' && ext != 'gif' && ext != 'png' && ext != 'zip' && ext != 'hwp' && ext != 'ppt' && ext != 'pptx' && ext != 'xlsx') {
+	    		alert("업로드 가능한 파일은 'jgp/gif/png/zip/hwp/ppt/pptx/xlsx' 만 가능합니다.");
+	    	}
+	    	else if(fileSize > maxSize) {
+	    		alert("업로드할 파일의 최대용량은 5MByte입니다.");
+	    	}
+	    	submitFlag == 1;
+    	}
+  		
+  		
     	// 전송전에 모든 체크가 끝나면 submitFlag가 1로 되게된다. 이때 값들을 서버로 전송처리한다.
     	if(submitFlag == 1) {
     		if(idCheckSw == 0) {
@@ -134,97 +134,117 @@
     			document.getElementById("nickNameBtn").focus();
     		}
     		else {
-	    		myForm.email.value = email;
-	    		myForm.tel.value = tel;
+	    		myform.email.value = email;
+	    		myform.tel.value = tel;
 	    		
-		    	myForm.submit();
+		    	myform.submit();
     		}
     	}
     	else {
     		alert("회원가입 실패~~ 폼의 내용을 확인하세요.");
     	}
+    	
     }
-	
-		//업로드한 사진 미리보기
-		function imgCheck(e) {
-			let img = document.getElementById("file").value;
-			
-			if(e.files && e.files[0]) {
-				let reader = new FileReader();
-				reader.onload = function(e) {
-					document.getElementById("demo").src = e.target.result;
-				}
-				reader.readAsDataURL(e.files[0]);
-			}  			
-			else {
-				document.getElementById("demo").src = "";
-			}
-		}
     
     // 아이디 중복체크
-    function joinIdCheck() {
-    	let mid = myForm.mid.value;
-    	console.log('야..진짜');
-    	if(mid.trim() == "" || mid.length() < 4 || mid.length() > 20) {
-    		alert("아이디를 입력하세요.(아이디는 4~20자 이내)");
-    		myForm.mid.focus();
+    function idCheck() {
+    	let mid = myform.mid.value;
+    	
+    	if(mid.trim() == "" || mid.length < 4 || mid.length > 20) {
+    		alert("아이디를 확인하세요(아이디는 4~20자 이내)");
+    		myform.mid.focus();
     		return false;
     	}
-
-			$.ajax({
-				url : "${ctp}/member/joinIdCheck"
-				type : "post",
-				data : {mid : mid},
-				success : function(res) {
-					if(res == "1") {
-						alert("이미 사용 중인 아이디입니다.");
-						$("#mid").focus();
-					}
-					else {
-						alert("사용 가능한 아이디입니다.");
-						idCheckSw = 1;
-						myForm.mid.readOnly = true;
-						$("#pwd").focus();
-					}
-				},
-				error : function() {
-					alert("전송 오류");
-				}
-			});
+    	
+    	$.ajax({
+    		type  : "post",
+    		url   : "${ctp}/member/joinIdCheck",
+    		data  : {mid : mid},
+    		success:function(res) {
+    			if(res == "1") {
+    				alert("이미 사용중인 아이디 입니다. 다시 아이디를 입력하세요.");
+    				$("#mid").focus();
+    			}
+    			else {
+    				alert("사용 가능한 아이디 입니다.");
+    				idCheckSw = 1;
+  	    		myform.mid.readOnly = true;
+  	    		$("#pwd").focus();
+    			}
+    		},
+    		error : function() {
+    			alert("전송오류!");
+    		}
+    	});
     }
     
     // 닉네임 중복체크
-    function joinNickCheck() {
-    	let nickName = myForm.nickName.value;
+    function nickCheck() {
+    	let nickName = myform.nickName.value;
     	
-    	if(nickName.trim() == "" || nickName.length() < 2 || nickName.length() > 20) {
-    		alert("아이디를 입력하세요.(아이디는 2~20자 이내)");
-    		myForm.nickName.focus();
+    	if(nickName.trim() == "" || nickName.length < 2 || nickName.length > 20) {
+    		alert("닉네임을 확인하세요(닉네임은 2~20자 이내)");
+    		myform.nickName.focus();
     		return false;
     	}
-
-			$.ajax({
-				url : "${ctp}/member/joinNickCheck"
-				type : "post",
-				data : {nickName : nickName},
-				success : function(res) {
-					if(res == "1") {
-						alert("이미 사용 중인 닉네임입니다.");
-						$("#nickName").focus();
-					}
-					else {
-						alert("사용 가능한 닉네임입니다.");
-						nickCheckSw = 1;
-						myForm.nickName.readOnly = true;
-						$("#name").focus();
-					}
-				},
-				error : function() {
-					alert("전송 오류");
-				}
-			});
+    	
+    	$.ajax({
+    		type  : "post",
+    		url   : "${ctp}/member/joinNickCheck",
+    		data  : {nickName : nickName},
+    		success:function(res) {
+    			if(res == "1") {
+    				alert("이미 사용중인 닉네임 입니다. 다시 닉네임을 입력하세요.");
+    				$("#nickName").focus();
+    			}
+    			else {
+    				alert("사용 가능한 닉네임 입니다.");
+    				nickCheckSw = 1;
+  	    		myform.nickName.readOnly = true;
+  	    		$("#name").focus();
+    			}
+    		},
+    		error : function() {
+    			alert("전송오류!");
+    		}
+    	});
     }
     
+    // 선택된 그림 미리보기
+    function imgCheck(e) {
+    	if(e.files && e.files[0]) {
+    		let reader = new FileReader();
+    		reader.onload = function(e) {
+    			document.getElementById("photoDemo").src = e.target.result;
+    		}
+    		reader.readAsDataURL(e.files[0]);
+    	}
+    	else {
+    		document.getElementById("photoDemo").src = "";
+    	}
+    }
+    
+    //이메일 인증
+    function joinEmail() {
+    	let email1 = myform.email1.value.trim();
+    	let email2 = myform.email2.value;
+    	let email = email1 + "@" + email2;
+    	
+    	if(email) {
+    		
+    		$.ajax({
+    			url : ,
+    			type : "post",
+    			data : {email : email},
+    			success : function(res) {
+    				
+    			},
+    			error : function() {
+						alert("전송 오류");
+					}
+    		});
+    	}
+		}
   </script>
 </head>
 <body>
@@ -232,12 +252,12 @@
 <jsp:include page="/WEB-INF/views/include/slide2.jsp" />
 <p><br/></p>
 <div class="container">
-  <!-- <form name="myForm" method="post" class="was-validated" enctype="multipart/form-data"> -->
-  <form name="myForm" method="post" class="was-validated">
+  <!-- <form name="myform" method="post" class="was-validated" enctype="multipart/form-data"> -->
+  <form name="myform" method="post" class="was-validated">
     <h2>회 원 가 입</h2>
     <br/>
     <div class="form-group">
-      <label for="mid">아이디 : &nbsp; &nbsp;<input type="button" value="아이디 중복체크" name="midBtn" id="midBtn" class="btn btn-secondary btn-sm" onclick="joinIdCheck()"/></label>
+      <label for="mid">아이디 : &nbsp; &nbsp;<input type="button" value="아이디 중복체크" id="midBtn" class="btn btn-secondary btn-sm" onclick="idCheck()"/></label>
       <input type="text" class="form-control" name="mid" id="mid" placeholder="아이디를 입력하세요." required autofocus/>
     </div>
     <div class="form-group">
@@ -245,7 +265,7 @@
       <input type="password" class="form-control" id="pwd" placeholder="비밀번호를 입력하세요." name="pwd" required />
     </div>
     <div class="form-group">
-      <label for="nickName">닉네임 : &nbsp; &nbsp;<input type="button" id="nickNameBtn" value="닉네임 중복체크" class="btn btn-secondary btn-sm" onclick="joinNickCheck()"/></label>
+      <label for="nickName">닉네임 : &nbsp; &nbsp;<input type="button" id="nickNameBtn" value="닉네임 중복체크" class="btn btn-secondary btn-sm" onclick="nickCheck()"/></label>
       <input type="text" class="form-control" id="nickName" placeholder="별명을 입력하세요." name="nickName" required />
     </div>
     <div class="form-group">
@@ -254,9 +274,10 @@
     </div>
     <div class="form-group">
       <label for="email1">Email address:</label>
+      	<input type="button" value="이메일인증" required onclick="joinEmail()" class="btn btn-sm btn-outline-warning mb-2" />
         <div class="input-group mb-3">
           <input type="text" class="form-control" placeholder="Email을 입력하세요." id="email1" name="email1" required />
-          <div class="input-group-append">
+          <div class="input-group-append">	
             <select name="email2" class="custom-select">
               <option value="naver.com" selected>naver.com</option>
               <option value="hanmail.net">hanmail.net</option>
@@ -405,11 +426,11 @@
     <div  class="form-group">
       회원 사진(파일용량:2MByte이내) :
       <input type="file" name="fName" id="file" onchange="imgCheck(this)" class="form-control-file border mb-2"/>
-      <img id="demo" width="200px" />
+      <div><img id="photoDemo" width="100px"/></div>
     </div>
     <button type="button" class="btn btn-secondary" onclick="fCheck()">회원가입</button> &nbsp;
     <button type="reset" class="btn btn-secondary">다시작성</button> &nbsp;
-    <button type="button" class="btn btn-secondary" onclick="location.href='${ctp}/login';">돌아가기</button>
+    <button type="button" class="btn btn-secondary" onclick="location.href='memberLogin';">돌아가기</button>
     
     <input type="hidden" name="email" />
     <input type="hidden" name="tel" />

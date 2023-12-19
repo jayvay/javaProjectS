@@ -11,4 +11,12 @@
 	<insert id="setMemberJoin">
 		insert into member2 values (default,#{vo.mid},#{vo.pwd},#{vo.nickName},#{vo.name},#{vo.gender},#{vo.birthday},#{vo.tel},#{vo.address},#{vo.email},#{vo.homePage},#{vo.job},#{vo.hobby},#{vo.photo},#{vo.content},#{vo.userInfor},default,default,default,default,default,default,default);
 	</insert>
+	
+	<update id="setPwdChangeOk">
+		update member2 set pwd = #{pwd} where mid = #{mid};
+	</update>
+	
+	<update id="setMemberPwdUpdate">
+		update member2 set pwd = #{imsiPwd} where mid = #{mid};
+	</update>
 </mapper>

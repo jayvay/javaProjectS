@@ -88,11 +88,16 @@
     	}
     	
     	$.ajax({
-    		url : "memberPasswordSearch.mem",
+    		url : "${ctp}/member/memberPwdSearch",
     		type : "post",
     		data : query,
     		success : function(res) {
-					passwordShow.innerHTML = "결과 : " + res;
+					if(res == "1") {
+						alert("임시 비밀번호를 이메일로 발송했습니다.")
+					}
+					else {
+						alert("없는 회원입니다.")
+					}
     		},
     		error : function() {
 					alert("전송 오류");
@@ -183,11 +188,6 @@
 	  	    </td>
 	  	  </tr>
   	  </table>
-  	  <table class="table table-borderless">
-	  	  <tr>
-	  	    <td><div id="passwordShow"></div></td>
-	  	  </tr>
-	  	</table>
   	</div>
 	</form>
 </div>

@@ -10,4 +10,8 @@ public interface MemberService {
 
 	public int setMemberJoin(MemberVO vo);
 
+	public void setMemberPwdUpdate(String mid, String imsiPwd);
+
+	public int setPwdChangeOk(String mid, String pwd);
+
 }
