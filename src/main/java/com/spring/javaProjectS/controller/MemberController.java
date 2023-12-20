@@ -1,5 +1,6 @@
 package com.spring.javaProjectS.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
@@ -169,26 +170,70 @@ public class MemberController {
 	}
 	
 	//비밀번호 변경 전 비밀번호 확인
+	@ResponseBody
 	@RequestMapping(value = "/memberPwdCheck", method = RequestMethod.POST)
 	public String memberPwdCheckPost(String pwd, HttpSession session) {
 		String mid = (String) session.getAttribute("sMid");
 		MemberVO vo = memberService.getMemberIdSearch(mid);
 		
-		if(passwordEncoder.matches(pwd, vo.getPwd())) return "1";
+		if(passwordEncoder.matches(pwd, vo.getPwd())) {
+			return "1";
+		}
 		else return "0";
 	}
 	
 	//비밀번호 변경
-	@RequestMapping(value = "/memberPwdCheckOk", method = RequestMethod.POST)
-	public String memberPwdCheckOkPost(String pwd, HttpSession session) {
+	@ResponseBody
+	@RequestMapping(value = "/memberPwdChange", method = RequestMethod.POST)
+	public String memberPwdCheckOkPost(String pwdNew, HttpSession session) {
 		String mid = (String) session.getAttribute("sMid");
-		pwd = passwordEncoder.encode(pwd);
-		int res = memberService.setPwdChangeOk(mid, pwd);
+		System.out.println("ㅡㅡ");
+		pwdNew = passwordEncoder.encode(pwdNew);	//새로운 비밀번호 암호화
+		int res = memberService.setPwdUpdate(mid, pwdNew);
 		
 		if(res != 0) return "1";
 		else return "0";
 	}
 	
+	//회원정보수정 폼
+	@RequestMapping(value = "/memberUpdate", method = RequestMethod.GET)
+	public String memberUpdateGet(Model model, HttpSession session) {
+		String mid = (String) session.getAttribute("sMid");
+		MemberVO vo = memberService.getMemberIdSearch(mid);
+		model.addAttribute("vo", vo);
+		return "member/memberUpdate";
+	}
+	
+	//회원정보수정
+	@RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
+	public String memberUpdatePost(MemberVO vo, HttpSession session) {
+		String nickName = (String) session.getAttribute("sNickName");
+		if(memberService.getMemberNickSearch(vo.getNickName()) != null && !nickName.equals(vo.getNickName())) {
+			return "redirect:/message/nickCheckNo";
+		}
+		
+		int res = memberService.setMemberUpdate(vo);
+		if(res != 0) {
+			session.setAttribute("sNickName", vo.getNickName());
+			return "redirect:/message/memberUpdateOk";
+		}
+		else return "redirect:/message/memberUpdateNo";
+	}
+	
+	//아이디 찾기
+	@ResponseBody
+	@RequestMapping(value = "/memberIdSearch", method = RequestMethod.POST)
+	public String memberIdSearchPost(String email) {
+		List<String> mids = memberService.getMemberMIdsSearch(email);
+		System.out.println("mids : "+ mids);
+		String res = "";
+		for(String mid : mids) {
+			System.out.println("하..진짜..11");
+			res += mid + "/";
+		}
+		if(mids.size() == 0) return "0";
+		else return res;
+	}
 	
 	//비밀번호 찾기
 	@ResponseBody
@@ -201,7 +246,7 @@ public class MemberController {
 			String imsiPwd = uid.toString().substring(0,8);
 			
 			//발급 받은 임시 비밀번호를 암호화 후 DB에 저장
-			memberService.setMemberPwdUpdate(mid, passwordEncoder.encode(imsiPwd));
+			memberService.setMemberPwdSearchUpdate(mid, passwordEncoder.encode(imsiPwd));
 			
 			//발급된 임시 비밀번호를 이메일로 전송
 			String title = "임시 비밀번호를 확인하세요.";
@@ -258,5 +303,19 @@ public class MemberController {
 		mailSender.send(message);
 		
 		return "1";
+	}
+	
+	//회원 탈퇴
+	@ResponseBody
+	@RequestMapping(value = "/memberDelete", method = RequestMethod.POST)
+	public String memberDeletePost(HttpSession session) {
+		String mid = (String) session.getAttribute("sMid");
+		
+		int res = memberService.setMemberDelete(mid);
+		if(res != 0) {
+			session.invalidate();
+			return "1";
+		}
+		else return "0";
 	}
 }

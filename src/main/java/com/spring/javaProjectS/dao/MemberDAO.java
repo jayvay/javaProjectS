@@ -1,5 +1,7 @@
 package com.spring.javaProjectS.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.spring.javaProjectS.vo.MemberVO;
@@ -12,8 +14,15 @@ public interface MemberDAO {
 
 	public int setMemberJoin(@Param("vo") MemberVO vo);
 
-	public void setMemberPwdUpdate(@Param("mid") String mid, @Param("imsiPwd") String imsiPwd);
+	public List<String> getMemberMIdsSearch(String email);
+	
+	public void setMemberPwdSearchUpdate(@Param("mid") String mid, @Param("imsiPwd") String imsiPwd);
 
-	public int setPwdChangeOk(@Param("mid") String mid, @Param("pwd") String pwd);
+	public int setPwdUpdate(@Param("mid") String mid, @Param("pwdNew") String pwdNew);
+
+	public int setMemberUpdate(@Param("vo") MemberVO vo);
+
+	public int setMemberDelete(@Param("mid") String mid);
+
 
 }

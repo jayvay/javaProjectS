@@ -43,7 +43,7 @@ public class HomeController {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
 		
-		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/ckeditor/board/");	//<- 실제 경로
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/ckeditor/");	//<- 실제 경로
 		String oFileName = upload.getOriginalFilename();
 		
 		//파일 이름 중복 안 되게 uuid를 사용하거나 날짜+파일이름으로 저장되도록 한다
@@ -59,9 +59,8 @@ public class HomeController {
 		
 		//사진 미리보기
 		PrintWriter out = response.getWriter();
-		String fileUrl = request.getContextPath() + "/data/ckeditor/board/" + oFileName;	//<- 매핑 경로
+		String fileUrl = request.getContextPath() + "/data/ckeditor/" + oFileName;	//<- 매핑 경로
 		out.println("{\"originalFilename\":\""+oFileName+"\",\"uploaded\":1,\"url\":\""+fileUrl+"\"}");	//제이슨 포맷..
-		
 		
 		out.flush();
 		fos.close();

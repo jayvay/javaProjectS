@@ -1,5 +1,7 @@
 package com.spring.javaProjectS.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,12 +33,28 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public int setPwdChangeOk(String mid, String pwd) {
-		return memberDAO.setPwdChangeOk(mid, pwd);
+	public List<String> getMemberMIdsSearch(String email) {
+		return memberDAO.getMemberMIdsSearch(email);
+	}
+	
+	@Override
+	public void setMemberPwdSearchUpdate(String mid, String imsiPwd) {
+		memberDAO.setMemberPwdSearchUpdate(mid, imsiPwd);
+	}
+	
+	@Override
+	public int setPwdUpdate(String mid, String pwdNew) {
+		return memberDAO.setPwdUpdate(mid, pwdNew);
 	}
 
 	@Override
-	public void setMemberPwdUpdate(String mid, String imsiPwd) {
-		memberDAO.setMemberPwdUpdate(mid, imsiPwd);
+	public int setMemberUpdate(MemberVO vo) {
+		return memberDAO.setMemberUpdate(vo);
 	}
+
+	@Override
+	public int setMemberDelete(String mid) {
+		return memberDAO.setMemberDelete(mid);
+	}
+
 }

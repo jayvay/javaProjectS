@@ -8,10 +8,16 @@ import com.spring.javaProjectS.vo.BoardVO;
 
 public interface BoardDAO {
 
-	public List<BoardVO> getBoardList();
-
 	public int setBoardInput(@Param("vo") BoardVO vo);
 
 	public BoardVO getBoardContent(@Param("idx") int idx);
+
+	public int totRecCnt();
+
+	public List<BoardVO> getBoardList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+
+	public int setBoardDelete(@Param("idx") int idx);
+
+	public int setBoardUpdate(@Param("vo") BoardVO vo);
 
 }

@@ -1,7 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="ctp" value="${pageContext.request.contextPath}" />
-
+<script>
+	'use strict';
+	
+	function memberDelete() {
+		let ans = confirm("정말로 탈퇴하시겠습니까?");
+		if(ans) {
+			ans = confirm("탈퇴 후 1개월동안 같은 아이디로 다시 가입할 수 없습니다.");
+			if(ans) {
+				$.ajax({
+					url : "${ctp}/member/memberDelete",
+					type : "post",
+					success : function(res) {
+						if(res == "1") {
+							alert("언젠가 다시 만나길 바라겠습니다")
+							location.href = "${ctp}/member/login";
+						}
+						else {
+							alert("회원 탈퇴 실패, 다시 시도하세요");
+						}
+					},
+					error : function() {
+						alert("전송 오류");
+					}
+				});
+			}
+		}
+	}
+</script>
 <!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar w3-white w3-card">
@@ -30,8 +57,8 @@
 		      <a href="${ctp}/user/userList" class="w3-bar-item w3-button">일정관리</a>
 		      <a href="${ctp}/user2/user2List" class="w3-bar-item w3-button">회원리스트</a>
 		      <a href="${ctp}/member/memberPwdCheck/p" class="w3-bar-item w3-button">비밀번호변경</a>
-		      <a href="#" class="w3-bar-item w3-button">회원정보수정</a>
-		      <a href="#" class="w3-bar-item w3-button">회원탈퇴</a>
+		      <a href="${ctp}/member/memberUpdate" class="w3-bar-item w3-button">회원정보수정</a>
+		      <a href="javascript:memberDelete()" class="w3-bar-item w3-button">회원탈퇴</a>
 		      <c:if test="${sLevel == 0}">
 		      	<a href="#" class="w3-bar-item w3-button">관리자</a>
 		      </c:if>

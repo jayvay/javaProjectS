@@ -43,10 +43,11 @@
 				<tr>
 					<th>내용</th>
 					<td><textarea rows="6" name="content" id="CKEDITOR" class="form-control" required></textarea></td>
-					<script>	<!-- -->
+					<script>	<!-- ckeditor -->
 						CKEDITOR.replace("content",{
 							height:480,
-							filebrowserUploadUrl:"${ctp}/imageUpload"    /* 파일(이미지) 업로드 시 매핑 경로 */
+							filebrowserUploadUrl:"${ctp}/imageUpload",    /* 파일(이미지) 업로드 시 매핑 경로 */
+							uploadUrl : "${ctp}/imageUpload"						 /* 여러 개의 그림 파일을 드래그 & 드롭 해서 업로드 */
 						});
 					</script>
 				</tr>

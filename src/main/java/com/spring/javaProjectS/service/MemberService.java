@@ -1,5 +1,7 @@
 package com.spring.javaProjectS.service;
 
+import java.util.List;
+
 import com.spring.javaProjectS.vo.MemberVO;
 
 public interface MemberService {
@@ -10,8 +12,15 @@ public interface MemberService {
 
 	public int setMemberJoin(MemberVO vo);
 
-	public void setMemberPwdUpdate(String mid, String imsiPwd);
+	public List<String> getMemberMIdsSearch(String email);
 
-	public int setPwdChangeOk(String mid, String pwd);
+	public void setMemberPwdSearchUpdate(String mid, String imsiPwd);
+
+	public int setPwdUpdate(String mid, String pwdNew);
+
+	public int setMemberUpdate(MemberVO vo);
+
+	public int setMemberDelete(String mid);
+
 
 }

@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MessageController {
 
 	@RequestMapping(value = "/message/{msgFlag}", method = RequestMethod.GET)
-	public String msgGet(Model model, @PathVariable String msgFlag, String mid) {
+	public String msgGet(Model model, @PathVariable String msgFlag, String mid,
+			@RequestParam(name = "idx", defaultValue = "0", required = false) int idx,
+			@RequestParam(name = "pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
 
+		//Member
 		if(msgFlag.equals("userDeleteOk")) {
 			model.addAttribute("msg", "유저가 삭제되었습니다.");
 			model.addAttribute("url", "user/userList");
@@ -101,8 +105,20 @@ public class MessageController {
 			model.addAttribute("msg", "이미 사용 중인 아이디입니다.");
 			model.addAttribute("url", "member/join");
 		}
+		else if(msgFlag.equals("nickCheckNo")) {
+			model.addAttribute("msg", "이미 사용 중인 닉네임입니다.");
+			model.addAttribute("url", "member/join");
+		}
+		else if(msgFlag.equals("memberUpdateOk")) {
+			model.addAttribute("msg", "회원정보가 수정되었습니다.");
+			model.addAttribute("url", "member/memberMain");
+		}
+		else if(msgFlag.equals("idCheckNo")) {
+			model.addAttribute("msg", "회원정보수정이 실패했습니다.");
+			model.addAttribute("url", "member/memberUpdate");
+		}
 		
-		
+		//Board
 		else if(msgFlag.equals("boardInputOk")) {
 			model.addAttribute("msg", "게시판에 글이 등록되었습니다.");
 			model.addAttribute("url", "board/boardList");
@@ -111,10 +127,26 @@ public class MessageController {
 			model.addAttribute("msg", "게시판에 글 등록이 실패하였습니다.");
 			model.addAttribute("url", "board/boardInput");
 		}
+		else if(msgFlag.equals("boardUpdateOk")) {
+			model.addAttribute("msg", "글이 수정되었습니다.");
+			model.addAttribute("url", "board/boardContent?idx="+idx+"&pag="+pag+"&pageSize="+pageSize);
+		}
+		else if(msgFlag.equals("boardUpdateNo")) {
+			model.addAttribute("msg", "게시글 수정이 실패하였습니다.");
+			model.addAttribute("url", "board/boardContent?idx="+idx+"&pag="+pag+"&pageSize="+pageSize);
+		}
+		else if(msgFlag.equals("boardDeleteOk")) {
+			model.addAttribute("msg", "글이 삭제되었습니다.");
+			model.addAttribute("url", "board/boardList?pag="+pag+"&pageSize="+pageSize);
+		}
+		else if(msgFlag.equals("boardDeleteNo")) {
+			model.addAttribute("msg", "게시글 삭제가 실패하였습니다.");
+			model.addAttribute("url", "board/boardContent?idx="+idx+"&pag="+pag+"&pageSize="+pageSize);
+		}
 		
 		
 		
-		
+		//Interceptor
 		else if(msgFlag.equals("adminNo")) {
 			model.addAttribute("msg", "관리자 외 출입금지입니다.");
 			model.addAttribute("url", "/");
