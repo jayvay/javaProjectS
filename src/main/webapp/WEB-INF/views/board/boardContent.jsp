@@ -71,7 +71,7 @@
     	if(ans) location.href = "boardDelete?idx=${vo.idx}&pag=${pag}&pageSize=${pageSize}";
     }
     
-    // 댓글 달기
+    // 원본글에 댓글 달기
     function replyCheck() {
 			let content = $("#content").val();
 			if(content.trim() == "") {
@@ -89,7 +89,7 @@
 			}
 			
     	$.ajax({
-				url : "boardReplyInput",
+				url : "${ctp}/board/boardReplyInput",
 				type : "post",
 				data : query,
 				success : function(res) {
@@ -135,6 +135,60 @@
     	let url = "complaintInput.ad?idx=${vo.idx}";
     	window.open(url,"nWin","width=580px,height=500px");
     }
+    
+    $(function() {
+    	$(".replyCloseBtn").hide();
+    });
+    //대댓글 등록 폼 보여주기
+    function replyShow(idx) {
+    	$("#replyShowBtn"+idx).hide();
+    	$("#replyCloseBtn"+idx).show();
+			$("#replyDemo"+idx).slideDown(200);
+		}
+    //대댓글 등록 폼 감추기
+    function replyClose(idx) {
+    	$("#replyShowBtn"+idx).show();
+    	$("#replyCloseBtn"+idx).hide();
+			$("#replyDemo"+idx).slideUp(200);
+		}
+   
+		//대댓글 입력
+		function reReplyCheck(idx, re_step, re_order) {
+			let content = $("#contentRe"+idx).val();
+			if(content.trim() == ""){
+				alert("답글을 입력하세요");
+				$("#contentRe"+idx).focus();
+				return false;
+			}
+			
+			let query = {
+					boardIdx : ${vo.idx},
+					re_step : re_step,
+					re_order : re_order,
+					mid : '${sMid}',
+					nickName : '${sNickName}',
+					hostIp : '${pageContext.request.remoteAddr}',
+					content : content
+			}
+			
+			$.ajax({
+				url : "${ctp}/board/boardReReplyInput",
+				type : "post",
+				data : query,
+				success : function(res) {
+					if(res == "1") {
+						alert("답글이 입력되었습니다.");
+						location.reload();
+					}
+					else {
+						alert("답글 입력 실패~");
+					}
+				},
+				error : function() {
+					alert("전송 오류");
+				}
+			});
+		}
   </script>
 </head>
 <body>
@@ -184,8 +238,8 @@
   <table class="table table-borderless m-0 p-0">
     <tr>
       <td class="text-left">
-        <c:if test="${flag != 'search'}"><input type="button" value="돌아가기" onclick="location.href='boardList?pag=${pag}&pageSize=${pageSize}';" class="btn btn-warning"/> &nbsp;</c:if>
-        <c:if test="${flag == 'search'}"><input type="button" value="돌아가기" onclick="location.href='boardSearch?pag=${pag}&pageSize=${pageSize}&search=${search}&searchString=${searchString}';" class="btn btn-warning"/> &nbsp;</c:if>
+        <c:if test="${param.flag != 'search'}"><input type="button" value="돌아가기" onclick="location.href='boardList?pag=${pag}&pageSize=${pageSize}';" class="btn btn-warning"/> &nbsp;</c:if>
+        <c:if test="${param.flag == 'search'}"><input type="button" value="돌아가기" onclick="location.href='boardSearch?pag=${pag}&pageSize=${pageSize}&search=${param.search}&searchString=${param.searchString}';" class="btn btn-warning"/> &nbsp;</c:if>
         <c:if test="${sMid == vo.mid || sLevel == 0}">
         	<input type="button" value="수정하기" onclick="location.href='boardUpdate?idx=${vo.idx}&pag=${pag}&pageSize=${pageSize}';" class="btn btn-info"/> &nbsp;
         	<input type="button" value="삭제하기" onclick="boardDelete()" class="btn btn-danger"/>
@@ -200,11 +254,11 @@
   <table class="table table-borderless">
   	<tr>
   		<td>
-  			<c:if test="${!empty nextVo.title}">
-	  			<a href="boardContent?idx=${nextVo.idx}&pag=${pag}&pageSize=${pageSize}">다음글 : ${nextVo.title}</a><br/>
+  			<c:if test="${!empty nextVO.title}">
+	  			<a href="boardContent?idx=${nextVO.idx}&pag=${pag}&pageSize=${pageSize}">다음글 : ${nextVO.title}</a><br/>
   			</c:if>
-  			<c:if test="${!empty preVo.title}">
-  				<a href="boardContent?idx=${preVo.idx}&pag=${pag}&pageSize=${pageSize}">이전글 : ${preVo.title}</a><br/>
+  			<c:if test="${!empty preVO.title}">
+  				<a href="boardContent?idx=${preVO.idx}&pag=${pag}&pageSize=${pageSize}">이전글 : ${preVO.title}</a><br/>
   			</c:if>
   		</td>
   	</tr>
@@ -214,25 +268,52 @@
 <!-- 댓글 처리 -->
 <div class="container"><b>댓글</b>
 	<!-- 댓글 리스트 보여주기 -->
-	<table class="table table-hover text-center">
+	<table class="table table-hover">
 		<tr>
 			<th>작성자</th>
 			<th class="text-left">내용</th>
 			<th>날짜</th>
 			<th>접속IP</th>
+			<th>답글</th>
 		</tr>
-		<c:forEach var="replyVo" items="${replyVos}" varStatus="st">
+		<c:forEach var="replyVO" items="${replyVOS}" varStatus="st">
 			<tr>
-				<td>${replyVo.nickName}
-					<c:if test="${replyVo.mid == sMid || sLevel == 0}">
-						<a href="javascript:replyDelete(${replyVo.idx})">❌</a>
+				<td>
+					<c:if test="${replyVO.re_step >= 1}">
+						<c:forEach var="i" begin="1" end="${replyVO.re_step}">&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach>└
+					</c:if>
+					${replyVO.nickName}
+					<c:if test="${replyVO.mid == sMid || sLevel == 0}">
+						<a href="javascript:replyDelete(${replyVO.idx})" title="댓글삭제">❌</a>
 					</c:if>
 				</td>
-				<td class="text-left">${fn: replace(replyVo.content, newLine, "<br/>")}</td>
-				<td>${fn: substring(replyVo.WDate, 0,10)}</td>
-				<td>${replyVo.hostIp}</td>
+				<td class="text-left">${fn: replace(replyVO.content, newLine, "<br/>")}</td>
+				<td class="text-center">${fn: substring(replyVO.WDate, 0,10)}</td>
+				<td class="text-center">${replyVO.hostIp}</td>
+				<td>
+					<a href="javascript:replyShow(${replyVO.idx})" id="replyShowBtn${replyVO.idx}" class="text-center badge badge-light">답글</a>
+					<a href="javascript:replyClose(${replyVO.idx})" id="replyCloseBtn${replyVO.idx}" class="replyCloseBtn text-center badge badge-secondary">접기</a>
+				</td>
 			</tr>
-			<tr><td colspan="4" class="m-0 p-0"></td></tr>
+			<tr>
+				<td colspan="5" class="m-0 p-0">
+					<div id="replyDemo${replyVO.idx}" style="display:none">
+						<table class="table table-center">
+							<tr>
+								<td style="width:85%" class="text-left">
+									<textarea rows="3" name="contentRe" id="contentRe${replyVO.idx}" class="form-control">@${replyVO.nickName}</textarea>
+								</td>
+								<td style="width:15%" class="text-right">
+									<br/>
+									<p>작성자 : ${sNickName}</p>
+									<p><input type="button" value="등록" onclick="reReplyCheck(${replyVO.idx},${replyVO.re_step},${replyVO.re_order})" class="btn btn-warning btn-sm"/></p>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+			<tr><td colspan="5" class="m-0 p-0"></td></tr>
 		</c:forEach>
 	</table>
 	<!-- 댓글 입력창 -->

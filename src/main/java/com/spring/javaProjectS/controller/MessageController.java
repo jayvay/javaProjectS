@@ -12,6 +12,7 @@ public class MessageController {
 
 	@RequestMapping(value = "/message/{msgFlag}", method = RequestMethod.GET)
 	public String msgGet(Model model, @PathVariable String msgFlag, String mid,
+			@RequestParam(name = "temp", defaultValue = "", required = false) String temp,
 			@RequestParam(name = "idx", defaultValue = "0", required = false) int idx,
 			@RequestParam(name = "pag", defaultValue = "1", required = false) int pag,
 			@RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
@@ -31,6 +32,10 @@ public class MessageController {
 		}
 		else if(msgFlag.equals("user2DeleteNo")) {
 			model.addAttribute("msg", "유저2 삭제 실패");
+			model.addAttribute("url", "user2/user2List");
+		}
+		else if(msgFlag.equals("validatorError")) {	//validator를 사용한 백엔드 유효성 검사
+			model.addAttribute("msg", "user 등록 실패 - " + temp);
 			model.addAttribute("url", "user2/user2List");
 		}
 		else if(msgFlag.equals("user2InputOk")) {

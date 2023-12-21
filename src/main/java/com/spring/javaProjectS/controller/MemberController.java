@@ -225,10 +225,8 @@ public class MemberController {
 	@RequestMapping(value = "/memberIdSearch", method = RequestMethod.POST)
 	public String memberIdSearchPost(String email) {
 		List<String> mids = memberService.getMemberMIdsSearch(email);
-		System.out.println("mids : "+ mids);
 		String res = "";
 		for(String mid : mids) {
-			System.out.println("하..진짜..11");
 			res += mid + "/";
 		}
 		if(mids.size() == 0) return "0";

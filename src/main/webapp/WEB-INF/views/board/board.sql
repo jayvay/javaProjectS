@@ -27,6 +27,8 @@ insert into board2 values (default, 'admin', '조삼달', 'admin@naver.com', 'ht
 create table board2Reply (
 	idx int not null auto_increment, -- 댓글의 고유번호
 	boardIdx int not null,					 -- 원본글(부모글)의 고유번호(외래키로 설정)
+	re_step int not null,						 -- 레벨(re_step값)에 따른 들여쓰기(계층 번호) : 부모댓글의 re_step은 0이다. 자식댓글(대댓글)은 re_step은 (부모re_step + 1) 이다	
+	re_order int not null, 					 -- 댓글이 게시되는 순서:부모댓글의 re_order는 1이다.자식댓글(대댓글)의 re_order=(부모re_order + 1)이고,re_order가 방금 등록한 부모댓글보다 큰 대댓글들은 각자의 re_order에 +1한다	
 	mid varchar(30) not null,				 -- 댓글 올린이의 아이디
 	nickName varchar(30) not null, 	 -- 댓글 올린이의 닉네임
 	wDate datetime default now(),		 -- 댓글 올린 날짜
@@ -38,6 +40,7 @@ create table board2Reply (
 	on update cascade		-- 부모필드를 수정하면 함께 영향을 받는다
 	on delete restrict 	-- 부모필드를 함부로 삭제할 수 없다
 );
+drop table board2Reply;
 desc board2Reply;
 insert into board2Reply values (default, 5, 'admin', '고나리', default, '192.168.50.199', '댓글이랍니당');
 insert into board2Reply values (default, 5, 'go123', '희수', default, '210.168.50.199', '이제 댓글도 쓸 수 있다고요!?');
@@ -120,3 +123,8 @@ select timestampdiff(day, wDate, now()) from board2;
 select wDate, date_format(wDate, '%Y-%m-%d') from board2;
 select wDate, date_format(wDate, '%Y-%m-%d %H:%i') from board2;
 
+/*-------------------------*/
+select * from board2 order by idx desc limit 0,5;
+select *,datediff(wDate, now()) as date_diff,
+	timestampdiff(hour, wDate, now()) as hour_diff 
+	from board2 order by idx desc limit 0,15;

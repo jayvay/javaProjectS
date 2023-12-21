@@ -92,7 +92,7 @@
 
 <!-- 게시글 검색 -->
 <div class="container text-center">
-	<form name="searchForm" method="post" action="boardSearch">
+	<form name="searchForm" method="get" action="boardSearch">
 		<b>검색 : </b>
 		<select name="search" id="search">
 			<option value="title" selected>글제목</option>
@@ -101,7 +101,7 @@
 		</select>
 		<input type="text" name="searchString" id="searchString"/>
 		<input type="submit" value="검색" class="btn btn-info btn-sm" />
-		<input type="hidden" name="pag" value="${pageVO.pag}" />
+		<%-- <input type="hidden" name="pag" value="${pageVO.pag}" /> --%>
 		<input type="hidden" name="pageSize" value="${pageVO.pageSize}" />
 	</form>
 </div>

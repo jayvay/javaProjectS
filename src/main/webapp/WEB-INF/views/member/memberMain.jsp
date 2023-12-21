@@ -9,32 +9,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>memberMain.jsp</title>
  	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
- 	<script>
- 		'use strict';
- 		
- 		function chatInput() {
-			let chat = $("#chat").val();
- 			
-			if(chat.trim() != "") {
-	 			$.ajax({
-					url : "${ctp}/memberMessageInput.mem",
-					type : "post",
-					data : {chat : chat},
-					error : function() {
-						alert("전송 오류");
-					}
-				});
-			}
-		}
- 		
- 		$(function() {
-			$("#chat").on("keydown", function(e) {
-				if(e.keyCode == 13) {
-					chatInput();
-				}
-			});
-		});
- 	</script>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/include/nav.jsp" />
@@ -48,20 +22,6 @@
 				정회원 등업 조건
 			</pre>
 		</c:if>
-		<hr/>
-		<!-- 실시간 DB 채팅 -->
-		<div style="width:500px">
-			<form name="chatForm">
-				<label for="chat"><b>실시간 대화방</b></label>
-				<iframe src="${ctp}/include/memberMessage.jsp" width="100%" height="250px" class="border"></iframe>
-				<div class="input-group mt-1">
-					<input type="text" name="chat" id="chat" class="form-control" placeholder="대화내용을 입력하세요." autofocus() />
-					<div class="input-group-append">
-						<input type="button" value="글 등록" onclick="chatInput()" class="btn btn-dark" />
-					</div>
-				</div>
-			</form>
-		</div>
 		<hr/>
 		<div><img src="${ctp}/member/noImage.jpg" width="200px" /></div>
 		<div>

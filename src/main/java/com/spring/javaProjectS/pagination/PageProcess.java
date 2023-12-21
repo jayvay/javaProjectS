@@ -15,9 +15,14 @@ public class PageProcess {
 		PageVO vo = new PageVO();
 		
 		int totRecCnt = 0;
+		String search = "";
 		
 		if(section.equals("board")) {
-			totRecCnt = boardDAO.totRecCnt();
+			if(part.equals("")) totRecCnt = boardDAO.totRecCnt();
+			else {
+			 	search = part;
+			 	totRecCnt = boardDAO.totRecCntSearch(search, searchString);
+			}
 		}
 		
 		//4. 총 페이지 건 수를 구한다.
@@ -49,7 +54,7 @@ public class PageProcess {
 		vo.setCurBlock(curBlock);
 		vo.setLastBlock(lastBlock);
 		vo.setPart(part);
-		vo.setSearch(part);
+		vo.setSearch(search);
 		vo.setSearchString(searchString);
 		
 		return vo;

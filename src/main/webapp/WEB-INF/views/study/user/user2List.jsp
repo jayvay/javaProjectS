@@ -45,8 +45,8 @@
 			let str = '';
 			str += '<form method="post">';
 			str += '<div>';
-			str += '<div>아이디: <input type="text" name="mid" required class="form-control mt-2 mb-2" /></div>';
-			str += '<div>이름: <input type="text" name="name" required class="form-control mb-2" /></div>';
+			str += '<div>아이디: <input type="text" name="mid" class="form-control mt-2 mb-2" /></div>';
+			str += '<div>이름: <input type="text" name="name" class="form-control mb-2" /></div>';
 			str += '<div>나이: <input type="number" name="age" value="20" min="1" max="99" class="form-control mb-2" /></div>';
 			str += '<div>주소: <input type="text" name="address" class="form-control mb-2" /></div>';
 			str += '<div><input type="submit" value="추가" class="form-control btn btn-light mb-2" /></div>';
