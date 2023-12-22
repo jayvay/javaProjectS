@@ -1,10 +1,19 @@
 package com.spring.javaProjectS.service;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaProjectS.dao.StudyDAO;
 import com.spring.javaProjectS.dao.User2DAO;
@@ -123,6 +132,39 @@ public class StudyServiceImpl implements StudyService {
 	@Override
 	public List<UserVO> getUserSearchVOS(String mid) {
 		return user2DAO.getUserSearchVOS(mid);
+	}
+
+	@Override
+	public int fileUpload(MultipartFile fName, String mid) {
+		int res = 0;
+		
+		//파일 이름 중복 처리
+		UUID uid = UUID.randomUUID();
+		String oFileName = fName.getOriginalFilename();
+		String sFileName = mid + "_" + uid + "_" + oFileName;
+		
+		//파일 복사 처리 (서버 메모리(아직 서버가 아님)에 올라와 있는 파일의 정보를 실제 서버 파일 시스템에 저장시킨다)
+		try {
+			writeFile(fName, sFileName);
+			res = 1;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
+
+	//서버 메모리(아직 서버가 아님)에 올라와 있는 파일의 정보를 실제 서버 파일 시스템에 저장하는 일반 메소드
+	private void writeFile(MultipartFile fName, String sFileName) throws IOException {
+		//request 객체를 사용하기 위해 불러온다
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/study/");
+		FileOutputStream fos = new FileOutputStream(realPath + sFileName);
+		
+		if(fName.getBytes().length != -1) fos.write(fName.getBytes());	//바이너리 형식으로 존재하는 파일을 바이트로 변환하면 껍데기에 내용이 넣어진다
+		fos.flush();
+		fos.close();
 	}
 	
 	

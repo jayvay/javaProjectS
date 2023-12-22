@@ -3,6 +3,8 @@ package com.spring.javaProjectS.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.spring.javaProjectS.vo.UserVO;
 
 public interface StudyService {
@@ -14,6 +16,8 @@ public interface StudyService {
 	public UserVO getUserSearchVO(String mid);
 
 	public List<UserVO> getUserSearchVOS(String mid);
+
+	public int fileUpload(MultipartFile fName, String mid);
 
 	
 }

@@ -63,7 +63,7 @@ public class BoardController {
 		else return "redirect:/message/boardInputNo";
 	}
 	
-	//글쓰기 폼
+	//게시글 보기
 	@RequestMapping(value = "/boardContent", method = RequestMethod.GET)
 	public String boardContentGet(int idx, Model model,
 			@RequestParam(name = "pag", defaultValue = "1", required = false) int pag,
@@ -225,6 +225,10 @@ public class BoardController {
 		return "board/boardSearchList";
 	}
 	
-	//게시글 검색 결과
-	
+	//좋아요 증가/취소
+	@ResponseBody
+	@RequestMapping(value = "/boardGood", method = RequestMethod.POST)
+	public void boardGoodPost(int idx, String goodCnt) {
+		boardService.setBoardGood(idx, goodCnt);
+	}
 }

@@ -37,4 +37,6 @@ public interface BoardDAO {
 
 	public List<BoardVO> getBoardSearchList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("search") String search, @Param("searchString") String searchString);
 
+	public void setBoardGood(@Param("idx") int idx, @Param("goodCnt") String goodCnt);
+
 }

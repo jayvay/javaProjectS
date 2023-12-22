@@ -186,6 +186,11 @@ public class BoardServiceImpl implements BoardService {
 		return boardDAO.getBoardSearchList(startIndexNo, pageSize, search, searchString);
 	}
 
+	@Override
+	public void setBoardGood(int idx, String goodCnt) {
+		boardDAO.setBoardGood(idx, goodCnt);
+	}
+
 	
 	
 }

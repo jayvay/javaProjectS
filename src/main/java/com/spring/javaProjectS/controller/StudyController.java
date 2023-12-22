@@ -1,5 +1,9 @@
 package com.spring.javaProjectS.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
@@ -9,7 +13,9 @@ import java.util.UUID;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -17,9 +23,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaProjectS.common.ARIAUtil;
 import com.spring.javaProjectS.common.SecurityUtil;
@@ -238,5 +247,71 @@ public class StudyController {
 		mailSender.send(message);
 		
 		return "redirect:/message/mailSendOk";
+	}
+	
+	@RequestMapping(value = "/fileUpload/fileUpload", method = RequestMethod.GET)
+	public String fileUploadGet(HttpServletRequest request, Model model) {
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/study"); //실제 서버의 경로(매핑 경로 아님)
+		
+		String[] files = new File(realPath).list(); //list 메소드로 폴더에 있는 파일 모두의 정보를 읽어옴
+		
+		model.addAttribute("files", files);
+		model.addAttribute("filesCnt", files.length);
+		
+		return "study/fileUpload/fileUpload";
+	}
+	
+	@RequestMapping(value = "/fileUpload/fileUpload", method = RequestMethod.POST)
+	public String fileUploadPost(MultipartFile fName, String mid) {
+		
+		int res = studyService.fileUpload(fName, mid);
+		
+		
+		if(res == 1) return "redirect:/message/fileUploadOk";
+		else return "redirect:/message/fileUploadNo";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/fileUpload/fileDelete", method = RequestMethod.POST)
+	public String fileDeletePost(HttpServletRequest request,
+			@RequestParam(name="file", defaultValue = "", required=false) String fName) {
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/study/");
+		
+		int res = 0;
+		File file = new File(realPath + fName);
+
+		if(file.exists()) {
+			file.delete();
+			res = 1;
+		}
+		
+		return res + "";
+	}
+	
+	@RequestMapping(value = "/fileUpload/fileDownload", method = RequestMethod.GET)
+	public void fileDownloadGet(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(name="file", defaultValue = "", required=false) String file) throws IOException {
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/study/");
+		
+		File DownloadFile = new File(realPath + file);
+		
+		String downFileName = new String(file.getBytes("UTF-8"), "8859_1");	//windows : 8859_1
+		//mime..
+		response.setHeader("Content-Disposition", "attachment:filename=" + downFileName);
+		
+		FileInputStream fis = new FileInputStream(DownloadFile);
+		
+		ServletOutputStream sos = response.getOutputStream();
+		
+		byte[] bytes = new byte[2048];
+		int data = 0;
+		while((data = fis.read(bytes, 0, bytes.length)) != -1) {
+			sos.write(bytes, 0, data);
+		}
+			sos.flush();
+			sos.close();
+			fis.close();
 	}
 }

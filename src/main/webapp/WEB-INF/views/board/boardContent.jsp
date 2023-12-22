@@ -19,10 +19,10 @@
   <script>
     'use strict';
     
-    // 좋아요 조회수 증가(중복불허....숙제...)
+    // 조회수, 좋아요 하다 말았음!!!! -- 1222
     function goodCheck() {
     	$.ajax({
-    		url  : "boardGoodCheck",
+    		url  : "${ctp}/board/boardGood",
     		type : "post",
     		data : {idx : ${vo.idx}},
     		success:function(res) {
@@ -35,12 +35,15 @@
     	});
     }
     
-    // 좋아요 조회수 증가(중복허용)
+    // 좋아요 증가(중복허용)
     function goodCheckPlus() {
     	$.ajax({
-    		url  : "boardGoodCheckPlus",
+    		url  : "${ctp}/board/boardGood",
     		type : "post",
-    		data : {idx : ${vo.idx}},
+    		data : {
+    			idx : ${vo.idx},
+    			goodCnt : +1
+    		},
     		success:function() {
     			location.reload();
     		},
@@ -50,12 +53,15 @@
     	});
     }
     
-    // 좋아요 조회수 감소(중복허용)
+    // 좋아요 감소(중복허용)
     function goodCheckMinus() {
     	$.ajax({
-    		url  : "boardGoodCheckMinus",
+    		url  : "${ctp}/board/boardGood",
     		type : "post",
-    		data : {idx : ${vo.idx}},
+    		data : {
+    			idx : ${vo.idx},
+    			goodCnt : -1
+    		},
     		success:function() {
     			location.reload();
     		},
@@ -114,7 +120,7 @@
 			if(!ans) return false;
 			
 			$.ajax ({
-				url : "boardReplyDelete",
+				url : "${ctp}/board/boardReplyDelete",
 				type : "post",
 				data : {idx : idx},
 				success : function(res) {

@@ -17,7 +17,7 @@ public class MessageController {
 			@RequestParam(name = "pag", defaultValue = "1", required = false) int pag,
 			@RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
 
-		//Member
+		//Study
 		if(msgFlag.equals("userDeleteOk")) {
 			model.addAttribute("msg", "유저가 삭제되었습니다.");
 			model.addAttribute("url", "user/userList");
@@ -51,9 +51,23 @@ public class MessageController {
 			model.addAttribute("url", "user2/user2List");
 		}
 		else if(msgFlag.equals("user2UpdateNo")) {
-			model.addAttribute("msg", "회원정보가 추가 실패");
+			model.addAttribute("msg", "회원정보 추가 실패");
 			model.addAttribute("url", "user2/user2List");
 		}
+		else if(msgFlag.equals("mailSendOk")) {
+			model.addAttribute("msg", "메일이 성공적으로 전송되었습니다.");
+			model.addAttribute("url", "study/mail/mailForm");
+		}
+		else if(msgFlag.equals("fileUploadOk")) {
+			model.addAttribute("msg", "파일이 업로드 되었습니다.");
+			model.addAttribute("url", "study/fileUpload/fileUpload");
+		}
+		else if(msgFlag.equals("fileUploadNo")) {
+			model.addAttribute("msg", "파일 업로드가 실패하였습니다.");
+			model.addAttribute("url", "study/fileUpload/fileUpload");
+		}
+		
+		//Guest
 		else if(msgFlag.equals("guestInputOk")) {
 			model.addAttribute("msg", "글이 등록되었습니다.");
 			model.addAttribute("url", "guest/guestList");
@@ -82,10 +96,8 @@ public class MessageController {
 			model.addAttribute("msg", "관리자 로그아웃 되었습니다.");
 			model.addAttribute("url", "guest/guestList");
 		}
-		else if(msgFlag.equals("mailSendOk")) {
-			model.addAttribute("msg", "메일이 성공적으로 전송되었습니다.");
-			model.addAttribute("url", "study/mail/mailForm");
-		}
+		
+		//Member
 		else if(msgFlag.equals("loginOk")) {
 			model.addAttribute("msg", mid + " 님, 다시 만나 반갑습니다.");
 			model.addAttribute("url", "member/memberMain");
@@ -149,6 +161,15 @@ public class MessageController {
 			model.addAttribute("url", "board/boardContent?idx="+idx+"&pag="+pag+"&pageSize="+pageSize);
 		}
 		
+		//pds
+		else if(msgFlag.equals("pdsInputOk")) {
+			model.addAttribute("msg", "자료가 등록되었습니다.");
+			model.addAttribute("url", "pds/pdsList");
+		}
+		else if(msgFlag.equals("pdsInputNo")) {
+			model.addAttribute("msg", "자료 등록이 실패하였습니다.");
+			model.addAttribute("url", "pds/pdsInput");
+		}
 		
 		
 		//Interceptor

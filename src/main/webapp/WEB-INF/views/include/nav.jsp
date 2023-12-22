@@ -49,6 +49,7 @@
 	        <a href="${ctp}/study/password/aria" class="w3-bar-item w3-button">암호화(Aria)</a>
 	        <a href="${ctp}/study/password/bCryptPassword" class="w3-bar-item w3-button">암호화(Security)</a>
 	        <a href="${ctp}/study/mail/mailForm" class="w3-bar-item w3-button">메일연습</a>
+	        <a href="${ctp}/study/fileUpload/fileUpload" class="w3-bar-item w3-button">파일업로드</a>
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover">
@@ -93,6 +94,7 @@
 	      <a href="${ctp}/study/password/aria" class="w3-bar-item w3-button">암호화(Aria)</a>
 	      <a href="${ctp}/study/password/bCryptPassword" class="w3-bar-item w3-button">암호화(Security)</a>
 	      <a href="${ctp}/study/mail/mailForm" class="w3-bar-item w3-button">메일연습</a>
+	      <a href="${ctp}/study/fileUpload/fileUpload" class="w3-bar-item w3-button">파일업로드</a>
 	    </div>
 	  </div>
 	  <div class="w3-dropdown-hover">
