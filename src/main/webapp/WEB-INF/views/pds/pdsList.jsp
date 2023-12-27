@@ -69,6 +69,31 @@
 			let pageSize = $("#pageSize").val();
 			location.href = "pdsList?part=${part}&pageSize="+pageSize;
 		}
+ 		
+ 		//상세내역보기 모달
+ 		function modalView(title,nickName,fDate,part,fName,fSName,fSize,downNum) {
+			fDate = fDate.substring(0,19);
+			fSize = parseInt(fSize / 1024) + "KByte";
+			let imgFiles = fSName.split("/");
+			
+			//$("#myInfoModal").on("show.bs.modal", function(e) {
+				$(".modal-header #title").html(title);
+				$(".modal-header #part").html(part);
+				$(".modal-body #nickName").html(nickName);
+				$(".modal-body #fDate").html(fDate);
+				$(".modal-body #fSize").html(fSize);
+				//$(".modal-body #fSName").html(fSName);
+				$(".modal-body #downNum").html(downNum);
+			//});
+			
+			//$(".modal-body #imgSrc").attr("src","");
+			for(let i=0; i<imgFiles.length; i++) {
+				let imgExt = imgFiles[i].substring(imgFiles[i].lastIndexOf(".")+1).toLowerCase();
+				if(imgExt == 'jpg' || imgExt == 'gif' || imgExt == 'png') {
+					$(".modal-body #imgSrc").attr("src", "${ctp}/pds/" + imgFiles[i]);
+				}
+			}
+		}
  	</script>
 </head>
 <body>
@@ -141,6 +166,7 @@
 					</td>
 					<td>${vo.downNum}</td>
 					<td>
+						<a href="#" onclick="modalView('${vo.title}','${vo.nickName}','${vo.FDate}','${vo.part}','${vo.FName}','${vo.FSName}','${vo.FSize}','${vo.downNum}')" class="badge badge-info" data-toggle="modal" data-target="#myInfoModal">상세보기</a><br/>
 						<c:if test="${vo.mid == sMid || sLevel == 0}">
 						  <a href="#" onclick="pdsDeleteCheck('${vo.idx}','${vo.title}')" class="badge badge-danger" data-toggle="modal" data-target="#myModal">삭제</a>
 						</c:if>
@@ -195,6 +221,33 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" id="myInfoModal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content modal-sm">
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h5><span id="title"></span>(분류 : <span id="part"></span>)</h5>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<!-- Modal body -->
+			<div class="modal-body">
+				<div>올린이 : <span id="nickName"></span></div>
+				<div>올린날짜 : <span id="fDate"></span></div>
+				<div>파일크기 : <span id="fSize"></span></div>
+				<div>다운횟수 : <span id="downNum"></span></div>
+				<hr/>
+				- 저장된 파일명 : <span id="fSName"></span><br/>
+				<img id="imgSrc" width="265px" /><br/>
+			</div>
+			<!-- Modal footer -->
+			<div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+		</div>
+	</div>
 </div>
 <p><br/></p>
 <jsp:include page="/WEB-INF/views/include/footer.jsp" />
