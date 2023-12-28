@@ -4,12 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +39,7 @@ public class PdsController {
 	@Autowired
 	PageProcess pageProcess;
 	
+	//자료실 리스트
 	@RequestMapping(value = "/pdsList", method = RequestMethod.GET)
 	public String pdsListGet(Model model,
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
@@ -52,12 +56,14 @@ public class PdsController {
 		return "pds/pdsList";
 	}
 	
+	//자료 등록 폼
 	@RequestMapping(value = "/pdsInput", method = RequestMethod.GET)
 	public String pdsInputGet(Model model, String part) {
 		model.addAttribute("part", part);
 		return "pds/pdsInput";
 	}
 	
+	//자료 등록
 	@RequestMapping(value = "/pdsInput", method = RequestMethod.POST)
 	public String pdsInputPost(PdsVO vo, MultipartHttpServletRequest file) {
 		
@@ -75,6 +81,7 @@ public class PdsController {
 		else return "redirect:/message/pdsInputNo";
 	}
 	
+	//자료 다운로드 횟수 증가
 	@ResponseBody
 	@RequestMapping(value = "/pdsDownNumPlus", method = RequestMethod.POST)
 	public String pdsDownNumPlusPost(int idx) {
@@ -82,6 +89,7 @@ public class PdsController {
 		return res + "";
 	}
 	
+	//자료 삭제
 	@ResponseBody
 	@RequestMapping(value = "/pdsDelete", method = RequestMethod.POST)
 	public String pdsDeletePost(int idx, String pwd) {
@@ -97,6 +105,7 @@ public class PdsController {
 		return res + "";
 	}
 	
+	//자료 전체다운
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/pdsTotalDown", method = RequestMethod.GET)
 	public String pdsTotalDownGet(HttpServletRequest request, int idx) throws IOException {
@@ -104,9 +113,9 @@ public class PdsController {
 		pdsService.setPdsDownNumPlus(idx);
 		
 		//여러 개의 파일을 하나의 zip파일로 압축(통합)하여 다운로드 처리(압축파일의 이름은 '제목.zip')
-		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/pds");
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/pds/");
 		
-		PdsVO vo = pdsService.getIdxSearch(idx);
+		PdsVO vo = pdsService.getPdsSearch(idx);
 		
 		String[] fNames = vo.getFName().split("/");
 		String[] fSNames = vo.getFSName().split("/");
@@ -123,7 +132,7 @@ public class PdsController {
 		
 		for(int i=0; i<fNames.length; i++) {
 			fis = new FileInputStream(realPath + fSNames[i]);
-			fos = new FileOutputStream(realPath + fNames[i]);
+			fos = new FileOutputStream(zipPath + fNames[i]);
 			File moveAndRename = new File(zipPath + fNames[i]);
 			
 			//fis 를 fos 에 쓰기 작업(파일생성)
@@ -146,8 +155,34 @@ public class PdsController {
 			fis.close();
 		}
 		zOut.close();
-		return "redirect:/pds/pdsDownAction?file=" + java.net.URLEncoder.encode(zipName);
+		return "redirect:/pds/pdsDownload?file=" + URLEncoder.encode(zipName);
 	}
 	
+	//자료 다운로드
+	@RequestMapping(value = "/pdsDownload", method = RequestMethod.GET)
+	public void pdsDownloadGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String file = request.getParameter("file");
+		
+		String downFilePath = request.getSession().getServletContext().getRealPath("/resources/data/pds/temp/") + file;
+		
+		File downFile = new File(downFilePath);
+		String downFileName = new String(file.getBytes("UTF-8"), "8859_1");
+		response.setHeader("Content-Disposition", "attachment;filename=" + downFileName);
+		
+		FileInputStream fis = new FileInputStream(downFile);
+		ServletOutputStream sos = response.getOutputStream();
+		
+		byte[] bytes = new byte[2048];
+		int data;
+		while((data = fis.read(bytes, 0, bytes.length)) != -1) {
+			sos.write(bytes, 0, data);
+		}
+		sos.flush();
+		sos.close();
+		fis.close();
+		
+		//다운로드 완료 후 zip파일 삭제 <<<<<<<<<<<왜 안되나요
+		downFile.delete();
+	}
 	
 }

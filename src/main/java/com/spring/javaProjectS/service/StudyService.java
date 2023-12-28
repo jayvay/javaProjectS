@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.javaProjectS.vo.Chart2VO;
 import com.spring.javaProjectS.vo.KakaoAddressVO;
 import com.spring.javaProjectS.vo.UserVO;
 
@@ -27,6 +28,8 @@ public interface StudyService {
 	public List<KakaoAddressVO> getKakaoAddressList();
 
 	public int setKakaoAddressDelete(String address);
+
+	public List<Chart2VO> getVisitCount();
 
 	
 }

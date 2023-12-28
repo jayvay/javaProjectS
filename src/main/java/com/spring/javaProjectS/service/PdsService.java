@@ -18,7 +18,5 @@ public interface PdsService {
 
 	public int setPdsDelete(PdsVO vo);
 
-	public PdsVO getIdxSearch(int idx);
-
 	
 }

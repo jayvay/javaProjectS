@@ -1,8 +1,13 @@
 package com.spring.javaProjectS.controller;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -11,12 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -33,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.javaProjectS.common.ARIAUtil;
 import com.spring.javaProjectS.common.SecurityUtil;
 import com.spring.javaProjectS.service.StudyService;
+import com.spring.javaProjectS.vo.Chart2VO;
 import com.spring.javaProjectS.vo.KakaoAddressVO;
 import com.spring.javaProjectS.vo.MailVO;
 import com.spring.javaProjectS.vo.UserVO;
@@ -316,6 +325,33 @@ public class StudyController {
 			fis.close();
 	}
 	
+	//모든 파일 삭제
+	@ResponseBody
+	@RequestMapping(value = "/fileUpload/fileDeleteAll", method = RequestMethod.POST)
+	public String fileDeleteAllPost(HttpServletRequest request, 
+			@RequestParam(name="file", defaultValue = "", required = false) String fName) {
+		int res = 0;
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/study/");
+		File targetFolder = new File(realPath);
+		
+		if(!targetFolder.exists()) {
+			System.out.println(targetFolder + " 경로가 존재하지 않습니다");
+			return res + "";
+		}
+		
+		File[] files = targetFolder.listFiles();
+		if(files.length != 0) {
+			for(File file : files) {
+				if(!file.isDirectory()) {
+					file.delete();
+				}
+			}
+			res = 1;
+		}
+		
+		return res + "";
+	}
+			
 	//카카오 지도 API 사용하기
 	@RequestMapping(value = "/kakao/kakaomap", method = RequestMethod.GET)
 	public String kakaoMapGet() {
@@ -378,5 +414,125 @@ public class StudyController {
 			@RequestParam(name="address", defaultValue = "사창사거리", required = false) String address) {
 		model.addAttribute("address", address);
 		return "study/kakao/kakaoEx3";
+	}
+	
+	//차트 연습 - 다양한 차트 그려보기
+	@RequestMapping(value = "/chart/chart", method = RequestMethod.GET)
+	public String chartGet(Model model,
+			@RequestParam(name="part", defaultValue = "", required = false) String part) {
+		model.addAttribute("part", part);
+		return "study/chart/chart";
+	}
+	
+	//차트 연습2 - 다양한 차트 분석
+	@RequestMapping(value = "/chart2/chart2", method = RequestMethod.GET)
+	public String chart2Get(Model model, Chart2VO vo) {
+		model.addAttribute("vo", vo);
+		return "study/chart2/chart2";
+	}
+	
+	//차트 연습2 - 다양한 차트 분석
+	@RequestMapping(value = "/chart2/chart2", method = RequestMethod.POST)
+	public String chart2Post(Model model, Chart2VO vo) {
+		model.addAttribute("vo", vo);
+		return "study/chart2/chart2";
+	}
+	
+	// 차트연습(최근방문횟수 분석처리)	//<<<<<<<<<<<<<<<<<<<<<<<<<<1228 여기 고치다 말았음!!
+	@RequestMapping(value = "/chart2/visitCnt", method = RequestMethod.GET)
+	public String chart2Get(Model model,
+			@RequestParam(name="part", defaultValue="", required=false) String part) {
+		//System.out.println("part  " + part);
+		List<Chart2VO> vos = studyService.getVisitCount();	// 최근 8일간 방문한 총 횟수를 가져온다.
+		String[] visitDates = new String[8];
+		int[] visitDays = new int[8];
+		int[] visitCounts = new int[8];
+		for(int i=0; i<visitDates.length; i++) {
+			visitDates[i] = vos.get(i).getVisitDate().replaceAll("-", "").substring(4);
+			visitDays[i] = Integer.parseInt(vos.get(i).getVisitDate().toString().substring(8));
+			visitCounts[i] = vos.get(i).getVisitCnt();
+		}
+		
+		model.addAttribute("title", "최근 8일간 방문횟수");
+		model.addAttribute("subTitle", "최근 8일동안 방문한 해당일자 방문자 총수를 표시합니다.");
+		model.addAttribute("visitCount", "방문횟수");
+		model.addAttribute("legend", "일일 방문 총횟수");
+		model.addAttribute("topTitle", "방문날짜");
+		model.addAttribute("xTitle", "방문날짜");
+		model.addAttribute("part", part);
+		model.addAttribute("visitDates", visitDates);
+		model.addAttribute("visitDays", visitDays);
+		model.addAttribute("visitCounts", visitCounts);
+		return "study/chart2/chart2";
+	}
+	
+	
+	//randomAlphaNumeric 폼 : 알파벳과 숫자를 랜덤하게 출력
+	@RequestMapping(value = "/captcha/randomAlphaNumeric", method = RequestMethod.GET)
+	public String randomAlphaNumericGet() {
+		return "study/captcha/randomAlphaNumeric";
+	}
+	
+	//randomAlphaNumeric 출력
+	@ResponseBody
+	@RequestMapping(value = "/captcha/randomAlphaNumeric", method = RequestMethod.POST)
+	public String randomAlphaNumericPost() {
+		String res = RandomStringUtils.randomAlphanumeric(64);
+		return res;
+	}
+	
+	//captcha 폼 : 사람과 기계를 구별하기 위해 사용 
+	@RequestMapping(value = "/captcha/captcha", method = RequestMethod.GET)
+	public String captchaGet() {
+		return "study/captcha/captcha";
+	}
+	
+	//captcha 이미지 만들기 
+	@ResponseBody
+	@RequestMapping(value = "/captcha/captchaImage", method = RequestMethod.POST)
+	public String captchaImagePost(HttpSession session, HttpServletRequest request) {
+		//시스템에 설정된 폰트 출력해보기
+//		Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+//		for(Font f : fonts) {
+//			System.out.println(f.getName());
+//		}
+		
+		try {
+			String randomString = RandomStringUtils.randomAlphanumeric(5); //알파뉴메릭문자 5개를 가져온다
+			System.out.println("randomString : " + randomString);
+			session.setAttribute("sCaptcha", randomString);
+			
+			Font font = new Font("Jokerman", Font.ITALIC, 30);
+			FontRenderContext frc = new FontRenderContext(null, true, true); //랜더링을 하겠다
+			Rectangle2D bounds = font.getStringBounds(randomString, frc); //사각형 2차원
+			int w = (int) bounds.getWidth();
+			int h = (int) bounds.getHeight();
+			
+			//이미지로 생성하기
+			BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+			Graphics2D g = image.createGraphics(); //껍데기
+			
+			g.fillRect(0, 0, w, h);
+			g.setColor(new Color(0, 156, 240));
+			g.setFont(font);
+			//<<-여기서 각종 랜더링 명령어에 의한 captcha 문자 작업을 하는데 생략함
+			g.drawString(randomString, (float)bounds.getX(), (float)-bounds.getY());
+			g.dispose();
+			
+			String realPath = request.getSession().getServletContext().getRealPath("/resources/data/study/");
+			ImageIO.write(image, "png", new File(realPath + "captcha.png"));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "study/captcha/captcha";
+	}
+
+	//captcha 확인하기 
+	@ResponseBody
+	@RequestMapping(value = "/captcha/captcha", method = RequestMethod.POST)
+	public String captchaPost(String strCaptcha, HttpSession session) {
+		if(strCaptcha.equals(session.getAttribute("sCaptcha").toString())) return "1";
+		else return "0";
 	}
 }

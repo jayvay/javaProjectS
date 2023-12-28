@@ -16,4 +16,8 @@
 	<delete id="setKakaoAddressDelete">
 		delete from kakaoAddress where address = #{address};
 	</delete>
+	
+ <select id="getVisitCount" resultType="com.spring.javaProjectS.vo.ChartVO">
+  	select substring(visitDate, 1, 10) as visitDate, visitCount from visit order by visitDate desc limit 8;
+  </select>
 </mapper>

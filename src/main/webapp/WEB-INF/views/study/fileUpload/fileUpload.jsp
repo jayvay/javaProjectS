@@ -55,6 +55,27 @@
 				}
 			});
 		}
+  	
+  	//모든 파일 삭제
+  	function fileDeleteAll() {
+			let ans = confirm("모든 파일을 삭제하시겠습니까?");
+			if(!ans) return false;
+			
+			$.ajax({
+				url : "${ctp}/study/fileUpload/fileDeleteAll",
+				type : "post", 
+				success : function(res) {
+					if(res == "1") { 
+						alert("파일이 삭제되었습니다");
+						location.reload();
+					}
+					else alert("파일 삭제 실패");
+				},
+				error : function() {
+					alert("전송 오류");
+				}
+			});
+		}
   </script>
 </head>
 <body>
@@ -73,12 +94,19 @@
   	<p>
   		<input type="button" value="파일업로드" onclick="fCheck()" class="btn btn-warning" />
   		<input type="reset" value="다시선택" class="btn btn-warning" />
+  		<input type="button" value="멀티파일업로드이동" onclick="location.href='multiFile';" class="btn btn-warning" />
   	</p>
  	</form>
  	<hr/>
  	<div id="downloadFile">
  		<h3>서버에 저장된 파일 정보(총 : ${filesCnt}건)</h3>
- 		<p>저장 경로 : ${ctp}/resources/data/study/*.* </p>
+ 		<div class="row">
+ 			<div class="col-6 mb-2">저장 경로 : ${ctp}/resources/data/study/*.*</div>
+ 			<div class="col-4 mb-2"></div>
+ 			<div class="col-2 mb-2">
+ 				<input type="button" value="폴더 내 모든파일 삭제" onclick="fileDeleteAll()" class="btn btn-sm btn-warning" />
+ 			</div>
+ 		</div>
  		<table class="table table-hover text-center">
  			<tr class="table-dark text-dark">
  				<th>번호</th>

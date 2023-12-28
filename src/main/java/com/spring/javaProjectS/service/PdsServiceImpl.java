@@ -114,9 +114,4 @@ public class PdsServiceImpl implements PdsService {
 		return pdsDAO.setPdsDelete(vo.getIdx());
 	}
 
-	@Override
-	public PdsVO getIdxSearch(int idx) {	//12월27일 여기 하다 말았음!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
