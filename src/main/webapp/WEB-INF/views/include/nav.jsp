@@ -59,8 +59,10 @@
 	        <a href="${ctp}/study/kakao/kakaomap" class="w3-bar-item w3-button">카카오맵</a>
 	        <a href="${ctp}/study/chart/chart" class="w3-bar-item w3-button">차트연습1</a>
 	        <a href="${ctp}/study/chart2/chart2" class="w3-bar-item w3-button">차트연습2</a>
+	        <a href="#" class="w3-bar-item w3-button">스케줄링(Quartz)</a>
 	        <a href="${ctp}/study/captcha/randomAlphaNumeric" class="w3-bar-item w3-button">랜덤알파뉴메릭</a>
 	        <a href="${ctp}/study/captcha/captcha" class="w3-bar-item w3-button">캡차연습</a>
+	        <a href="${ctp}/study/qrCode/qrCode" class="w3-bar-item w3-button">QR코드연습</a>
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover">

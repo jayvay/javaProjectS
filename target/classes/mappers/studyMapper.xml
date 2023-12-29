@@ -17,7 +17,15 @@
 		delete from kakaoAddress where address = #{address};
 	</delete>
 	
- <select id="getVisitCount" resultType="com.spring.javaProjectS.vo.ChartVO">
+  <select id="getVisitCount" resultType="com.spring.javaProjectS.vo.Chart2VO">
   	select substring(visitDate, 1, 10) as visitDate, visitCount from visit order by visitDate desc limit 8;
+  </select>
+  
+  <insert id="setQrCode">
+    insert into qrCode values (default,#{vo.mid},#{vo.name},#{vo.email},#{vo.movieName},#{vo.movieDate},#{vo.movieTime},#{vo.movieAdult},#{vo.movieChild},#{vo.purchaseDate},#{vo.qrCodeName});
+  </insert>
+  
+  <select id="getQrCodeSearch" resultType="com.spring.javaProjectS.vo.QrCodeVO">
+  	select * from qrCode where qrCodeName = #{qrCode};
   </select>
 </mapper>

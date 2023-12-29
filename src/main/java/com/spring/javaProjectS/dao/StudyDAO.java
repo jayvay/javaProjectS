@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.spring.javaProjectS.vo.Chart2VO;
 import com.spring.javaProjectS.vo.KakaoAddressVO;
+import com.spring.javaProjectS.vo.QrCodeVO;
 
 public interface StudyDAO {
 
@@ -18,5 +19,9 @@ public interface StudyDAO {
 	public int setKakaoAddressDelete(@Param("address") String address);
 
 	public List<Chart2VO> getVisitCount();
+
+	public void setQrCode(@Param("vo") QrCodeVO vo);
+
+	public QrCodeVO getQrCodeSearch(@Param("qrCode") String qrCode);
 
 }

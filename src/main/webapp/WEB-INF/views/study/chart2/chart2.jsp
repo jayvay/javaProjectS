@@ -59,14 +59,20 @@
 				str += '<input type="hidden" name="part" id="part" />';
 				str += '</form>';
 				
-				$("#demo").html(str);
 			}
+			else if(part == "visitCount") {
+				chartShow(part);
+			}
+			$("#demo").html(str);
 		}
   	
   	function chartShow(part) {
 			if(part == 'barV') {	
 				document.chartForm.part.value = part;
 				chartForm.submit();
+			}
+			else if(part == 'visitCount') {
+				location.href = 'visitCount?part=' + part;
 			}
 		}
   </script>
@@ -86,14 +92,16 @@
   	<p>차트 선택
   		<select name="part" id="part" onchange="chartChange()">
   			<option value="">차트선택</option>
-  			<option value="barV" ${vo.part == 'barV' ? 'selected' : ''}>수직 막대 차트</option>
+  			<option value="barV" ${part == 'barV' ? 'selected' : ''}>수직 막대 차트</option>
+  			<option value="visitCount" ${part == 'visitCount' ? 'selected' : ''}>최근방문자수</option> 
   		</select>
   	</p>
   	<hr/>
   	<div id="demo"></div>
   	<hr/>
   	<div>
-  		<c:if test="${vo.part == 'barV'}"><jsp:include page="barVChart.jsp" /></c:if>
+  		<c:if test="${part == 'barV'}"><jsp:include page="barVChart.jsp" /></c:if>
+  		<c:if test="${part == 'visitCount'}"><jsp:include page="lineChartVisitCount.jsp" /></c:if>
   	</div>
   </div>
 </div>

@@ -2,7 +2,7 @@ show tables;
 
 create table visit (
 	visitDate datetime not null default now(),
-	visitCnt int not null default 1
+	visitCount int not null default 1
 );
 
 drop table visit;

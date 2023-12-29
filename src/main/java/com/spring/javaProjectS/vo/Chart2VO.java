@@ -32,4 +32,7 @@ public class Chart2VO {
 	private String x4Value2;
 	private String x4Value3;
 	
+	/* 최근 방문자수 담을 필드 */
+	private String visitDate;
+	private int visitCount;
 }

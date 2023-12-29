@@ -44,6 +44,7 @@ import com.spring.javaProjectS.service.StudyService;
 import com.spring.javaProjectS.vo.Chart2VO;
 import com.spring.javaProjectS.vo.KakaoAddressVO;
 import com.spring.javaProjectS.vo.MailVO;
+import com.spring.javaProjectS.vo.QrCodeVO;
 import com.spring.javaProjectS.vo.UserVO;
 
 @Controller
@@ -438,8 +439,8 @@ public class StudyController {
 		return "study/chart2/chart2";
 	}
 	
-	// 차트연습(최근방문횟수 분석처리)	//<<<<<<<<<<<<<<<<<<<<<<<<<<1228 여기 고치다 말았음!!
-	@RequestMapping(value = "/chart2/visitCnt", method = RequestMethod.GET)
+	 //차트연습(최근방문횟수 분석처리)	
+	@RequestMapping(value = "/chart2/visitCount", method = RequestMethod.GET)
 	public String chart2Get(Model model,
 			@RequestParam(name="part", defaultValue="", required=false) String part) {
 		//System.out.println("part  " + part);
@@ -450,7 +451,7 @@ public class StudyController {
 		for(int i=0; i<visitDates.length; i++) {
 			visitDates[i] = vos.get(i).getVisitDate().replaceAll("-", "").substring(4);
 			visitDays[i] = Integer.parseInt(vos.get(i).getVisitDate().toString().substring(8));
-			visitCounts[i] = vos.get(i).getVisitCnt();
+			visitCounts[i] = vos.get(i).getVisitCount();
 		}
 		
 		model.addAttribute("title", "최근 8일간 방문횟수");
@@ -458,7 +459,6 @@ public class StudyController {
 		model.addAttribute("visitCount", "방문횟수");
 		model.addAttribute("legend", "일일 방문 총횟수");
 		model.addAttribute("topTitle", "방문날짜");
-		model.addAttribute("xTitle", "방문날짜");
 		model.addAttribute("part", part);
 		model.addAttribute("visitDates", visitDates);
 		model.addAttribute("visitDays", visitDays);
@@ -535,4 +535,94 @@ public class StudyController {
 		if(strCaptcha.equals(session.getAttribute("sCaptcha").toString())) return "1";
 		else return "0";
 	}
+	
+	// QR Code 폼 보기
+	@RequestMapping(value = "/qrCode/qrCode", method = RequestMethod.GET)
+	public String qrCodeGet() {
+		return "study/qrCode/qrCode";
+	}
+	
+	// QR Code 개인 정보 등록 폼 보기
+	@RequestMapping(value = "/qrCode/qrCodeEx1", method = RequestMethod.GET)
+	public String qrCodeEx1Get() {
+		return "study/qrCode/qrCodeEx1";
+	}
+	
+	// QR Code 개인 정보 QR 코드 생성
+	@ResponseBody
+	@RequestMapping(value = "/qrCode/qrCodeEx1", method = RequestMethod.POST, produces="application/text; charset=utf8")
+	public String qrCodeEx1Post(HttpServletRequest request, QrCodeVO vo) {
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/qrCode/");
+		String qrCodeName = studyService.setQrCodeCreate1(realPath, vo);
+		return qrCodeName;
+	}
+
+	// QR Code2 소개할 사이트 주소 등록 폼
+	@RequestMapping(value = "/qrCode/qrCodeEx2", method = RequestMethod.GET)
+	public String qrCodeEx2Get() {
+		return "study/qrCode/qrCodeEx2";
+	}
+	
+	// QR Code2 소개할 사이트 QR 코드 생성
+	@ResponseBody
+	@RequestMapping(value = "/qrCode/qrCodeEx2", method = RequestMethod.POST, produces="application/text; charset=utf8")
+	public String qrCodeEx2Post(HttpServletRequest request, QrCodeVO vo) {
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/qrCode/");
+		String qrCodeName = studyService.setQrCodeCreate2(realPath, vo);
+		return qrCodeName;
+	}
+	
+	// QR Code3 영화 예매 등록 폼
+	@RequestMapping(value = "/qrCode/qrCodeEx3", method = RequestMethod.GET)
+	public String qrCodeEx3Get() {
+		return "study/qrCode/qrCodeEx3";
+	}
+	
+	// QR Code3 영화 예매 정보 QR 코드 생성
+	@ResponseBody
+	@RequestMapping(value = "/qrCode/qrCodeEx3", method = RequestMethod.POST, produces="application/text; charset=utf8")
+	public String qrCodeEx3Post(HttpServletRequest request, QrCodeVO vo) {
+		String movieTemp = vo.getMid() + "_";
+		movieTemp += vo.getMovieName() + "_";
+		movieTemp += vo.getMovieDate() + "_";
+		movieTemp += vo.getMovieTime() + "_A";
+		movieTemp += vo.getMovieAdult() + "_C";
+		movieTemp += vo.getMovieChild();
+		vo.setMovieTemp(movieTemp);
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/qrCode/");
+		String qrCodeName = studyService.setQrCodeCreate3(realPath, vo);
+		return qrCodeName;
+	}
+	
+	// QR Code4 영화 예매 정보를 DB에 저장할 폼
+	@RequestMapping(value = "/qrCode/qrCodeEx4", method = RequestMethod.GET)
+	public String qrCodeEx4Get() {
+		return "study/qrCode/qrCodeEx4";
+	}
+	
+	// QR Code4 영화 예매 정보 QR 코드 생성 및 DB에 저장
+	@ResponseBody
+	@RequestMapping(value = "/qrCode/qrCodeEx4", method = RequestMethod.POST, produces="application/text; charset=utf8")
+	public String qrCodeEx4Post(HttpServletRequest request, QrCodeVO vo) {
+		String movieTemp = vo.getMid() + "_";
+		movieTemp += vo.getMovieName() + "_";
+		movieTemp += vo.getMovieDate() + "_";
+		movieTemp += vo.getMovieTime() + "_A";
+		movieTemp += vo.getMovieAdult() + "_C";
+		movieTemp += vo.getMovieChild();
+		vo.setMovieTemp(movieTemp);
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/qrCode/");
+		String qrCodeName = studyService.setQrCodeCreate4(realPath, vo);
+		return qrCodeName;
+	}
+	
+	// QR Code4 영화 예매 정보를 DB에서 검색하여 가져오기
+	@ResponseBody
+	@RequestMapping(value = "/qrCode/qrCodeSearch", method = RequestMethod.POST)
+	public QrCodeVO qrCodeSearchPost(String qrCode) {
+		return studyService.getQrCodeSearch(qrCode);
+	}
+	
 }

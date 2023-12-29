@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaProjectS.vo.Chart2VO;
 import com.spring.javaProjectS.vo.KakaoAddressVO;
+import com.spring.javaProjectS.vo.QrCodeVO;
 import com.spring.javaProjectS.vo.UserVO;
 
 public interface StudyService {
@@ -30,6 +31,12 @@ public interface StudyService {
 	public int setKakaoAddressDelete(String address);
 
 	public List<Chart2VO> getVisitCount();
+
+	public String setQrCodeCreate1(String realPath, QrCodeVO vo);
+	public String setQrCodeCreate2(String realPath, QrCodeVO vo); //같은 내용임(공부 차원에서 새로 또 만듦)
+	public String setQrCodeCreate3(String realPath, QrCodeVO vo);
+	public String setQrCodeCreate4(String realPath, QrCodeVO vo);
+	public QrCodeVO getQrCodeSearch(String qrCode);
 
 	
 }
