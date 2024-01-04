@@ -31,4 +31,12 @@
 	<update id="setMemberDelete">
 		update member2 set userDel = 'OK' where mid = #{mid};
 	</update>
+	
+	<select id="getMemberKakaoLoginSearch" resultType="com.spring.javaProjectS.vo.MemberVO">
+		select * from member2 where nickname = #{nickname} and email = #{email};
+	</select>
+	
+	<insert id="setKakaoMemberInput">
+		insert into member2 (mid, pwd, nickname, email, name) values (#{mid}, #{pwd}, #{nickname}, #{email}, #{nickname});
+	</insert>
 </mapper>

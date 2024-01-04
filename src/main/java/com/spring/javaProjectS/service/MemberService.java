@@ -22,5 +22,9 @@ public interface MemberService {
 
 	public int setMemberDelete(String mid);
 
+	public MemberVO getMemberKakaoLoginSearch(String nickName, String email);
+
+	public void setKakaoMemberInput(String mid, String pwd, String nickName, String email);
+
 
 }

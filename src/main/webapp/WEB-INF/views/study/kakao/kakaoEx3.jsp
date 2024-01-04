@@ -68,7 +68,7 @@
   <hr/>
   
 	<div id="map" style="width:100%;height:500px;"></div>
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=158c673636c9a17a27b67c95f2c6be5c&libraries=services"></script>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5277e19a72487035adae6349e84d6957&libraries=services"></script>
 	<script>
 			//키워드로 장소 검색하기
 			// 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다

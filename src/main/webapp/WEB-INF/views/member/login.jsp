@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>login.jsp</title>
   <jsp:include page="/WEB-INF/views/include/bs4.jsp" />
+  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <style>
     th {
       background-color: #eee;
@@ -108,6 +109,25 @@
     	});
 		}
     
+    //카카오 로그인을 위한 자바스크립트 앱 키
+    window.Kakao.init("5277e19a72487035adae6349e84d6957");
+    function kakaoLogin() {
+			//카카오에 인증 요청
+			window.Kakao.Auth.login({
+				scope: 'profile_nickname',
+				success : function(autoObj) {
+					console.log(Kakao.Auth.getAccessToken(), "정상적으로 토큰이 발급되었습니다");
+					window.Kakao.API.request({
+						url : '/v2/user/me',
+						success : function() {
+							const kakao_account = res.kakao_account;
+							console.log(kakao_account);
+							location.href = "${ctp}/member/kakaoLogin?nickName="+kakao_account.profile.nickname+"&email="+kakao_account.email+"&accessToken="+Kakao.Auth.getAccessToken();
+						}
+					});
+				}
+			});
+		}
   </script>
 </head>
 <body>
@@ -141,6 +161,11 @@
   	      [<a href = "javascript:midSearch()">아이디찾기</a>] / [<a href = "javascript:pwdSearch()">비밀번호찾기</a>]
   	    </td>
   	  </tr>
+  	  <tr>
+  	  	<td colspan="2" class="text-center">
+  	  		<a href="javascript:kakaoLogin()"><img src="${ctp}/images/kakao_login_medium_wide.png" /></a>
+  	  	</td>
+  	  </tr>
   	</table>
   </form>
   <form name="searchForm">
@@ -156,7 +181,7 @@
 	  	  <tr>
 	  	    <td>
 	  	      <div class="input-group">
-	  	        <input type="text" name="eamilSearch" id="emailSearch" class="form-control" placeholder="이메일 입력"/>
+	  	        <input type="text" name="emailSearch" id="emailSearch" class="form-control" placeholder="이메일 입력"/>
 	  	        <div class="input-group-append">
 	  	          <input type="button" value="이메일검색" onclick="emailFind()" class="btn btn-info" />
 	  	        </div>

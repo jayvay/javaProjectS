@@ -57,4 +57,15 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.setMemberDelete(mid);
 	}
 
+	@Override
+	public MemberVO getMemberKakaoLoginSearch(String nickName, String email) {
+		return memberDAO.getMemberKakaoLoginSearch(nickName, email);
+	}
+
+	@Override
+	public void setKakaoMemberInput(String mid, String pwd, String nickName, String email) {
+		memberDAO.setKakaoMemberInput(mid, pwd, nickName, email);
+		
+	}
+
 }

@@ -18,6 +18,7 @@
 			<mapping path="member/**" />							<!-- mapping : interceptor를 거쳐야 하는 곳 -->
 			<mapping path="/board/boardList"/>
 			<exclude-mapping path="/member/login"/>		<!-- exclude-mapping : interceptor를 거치지 않는 곳 -->
+			<exclude-mapping path="/member/kakaoLogin"/>
 			<exclude-mapping path="/member/logout"/>
 			<exclude-mapping path="/member/join"/>
 			<exclude-mapping path="/member/joinIdCheck"/>

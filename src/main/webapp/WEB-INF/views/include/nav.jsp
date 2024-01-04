@@ -63,6 +63,10 @@
 	        <a href="${ctp}/study/captcha/randomAlphaNumeric" class="w3-bar-item w3-button">랜덤알파뉴메릭</a>
 	        <a href="${ctp}/study/captcha/captcha" class="w3-bar-item w3-button">캡차연습</a>
 	        <a href="${ctp}/study/qrCode/qrCode" class="w3-bar-item w3-button">QR코드연습</a>
+	        <a href="${ctp}/study/thumbnail/thumbnailForm" class="w3-bar-item w3-button">썸네일연습</a>
+	        <a href="${ctp}/study/crawling/jsoup" class="w3-bar-item w3-button">크롤링(jsoup)</a>
+	        <a href="${ctp}/study/crawling/selenium" class="w3-bar-item w3-button">크롤링(selenium)</a>
+	        <a href="${ctp}/errorPage/errorMain" class="w3-bar-item w3-button">Error연습</a>
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover">
@@ -85,6 +89,7 @@
   	</c:if>
   	<c:if test="${!empty sLevel}">
   		<a href="${ctp}/member/logout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Logout</a>
+  		<a href="${ctp}/member/kakaoLogout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">카카오Logout</a>
     </c:if>
     <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fa fa-search"></i></a>
   </div>

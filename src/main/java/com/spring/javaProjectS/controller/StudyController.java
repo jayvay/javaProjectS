@@ -25,6 +25,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -625,4 +634,154 @@ public class StudyController {
 		return studyService.getQrCodeSearch(qrCode);
 	}
 	
+	// 썸네일 연습 폼
+	@RequestMapping(value = "/thumbnail/thumbnailForm", method = RequestMethod.GET)
+	public String thumbnailFormGet() {
+		return "study/thumbnail/thumbnailForm";
+	}
+	
+	// 썸네일 이미지 처리하기
+	@RequestMapping(value = "/thumbnail/thumbnailForm", method = RequestMethod.POST)
+	public String thumbnailFormPost(MultipartFile file) {
+		int res = studyService.setThumbnailCreate(file);
+		if(res == 1) return "redirect:/message/thumbnailOk";
+		else return "redirect:/message/thumbnailNo";
+	}
+	
+	//jsoup을 이용한 웹 크롤링 폼
+	@RequestMapping(value = "/crawling/jsoup", method = RequestMethod.GET)
+	public String crawlingJsoupGet() {
+		return "study/crawling/jsoup";
+	}
+	
+	//jsoup을 이용한 웹 크롤링
+	@ResponseBody
+	@RequestMapping(value = "/crawling/jsoup", method = RequestMethod.POST)
+	public ArrayList<String> crawlingJsoupPost(String url, String selector) throws Exception {	//io 등 여러 개 걸려서 제일 큰 Exception 으로 처리..
+		Connection conn = Jsoup.connect(url); //org.jsoup.Connection 으로 올려야 함
+		
+		Document document = conn.get();
+		
+		//Elements selects = document.select("div.cjs_t");	
+		//Elements selects = document.select("div.cjs_news_mw");	
+		//Elements selects = document.select("div.mod_vw_thumb link_thumb");	
+		Elements selects = document.select(selector);	
+		//System.out.println("selects : " + selects);
+		
+		ArrayList<String> vos = new ArrayList<String>();
+		int i = 0;
+		for(Element select : selects) {
+			i++;
+			//System.out.println(i + " : " + select);
+			//System.out.println(i + " : " + select.text());
+			System.out.println(i + " : " + select.html());
+			vos.add(i + " : " + select.html());
+		}
+		
+		return vos;
+	}
+	
+	//jsoup을 이용한 웹 크롤링 (네이버 검색어로 검색결과 처리하기)
+	@ResponseBody
+	@RequestMapping(value = "/crawling/naverSearch", method = RequestMethod.POST)
+	public ArrayList<String> crawlingnaverSearchPost(String search, String searchSelector) throws Exception {	//io 등 여러 개 걸려서 제일 큰 Exception 으로 처리..
+		Connection conn = Jsoup.connect(search); //org.jsoup.Connection 으로 올려야 함
+		
+		Document document = conn.get();
+		Elements selects = document.select(searchSelector);	
+		
+		ArrayList<String> vos = new ArrayList<String>();
+		int i = 0;
+		for(Element select : selects) {
+			i++;
+			System.out.println(i + " : " + select.html());
+			vos.add(i + " : " + select.html());
+		}
+		
+		return vos;
+	}
+	
+	// jsoup를 이용한 웹크롤링 처리하기(네이버 이미지 검색어로 검색결과 처리하기)
+	@ResponseBody
+	@RequestMapping(value = "/crawling/naverImageSearch", method = RequestMethod.POST)
+	public ArrayList<String> crawlingNaverImageSearchPost(String search, String searchImageSelector) throws Exception {
+		Connection conn = Jsoup.connect(search);
+		
+		Document document = conn.get();
+		System.out.println("document : " + document);
+		Elements selects = document.select(searchImageSelector);
+		System.out.println("searchImageSelector : " + selects);
+		
+		ArrayList<String> vos = new ArrayList<String>();
+		int i = 0;
+		for(Element select : selects) {
+			i++;
+			System.out.println(i + " : " + select.html());
+			vos.add(i + " : " + select.html());
+		}
+		
+		return vos;
+	}
+	
+  // 크롤링폼 보기(selenium)
+  @RequestMapping(value = "/crawling/selenium", method = RequestMethod.GET)
+  public String crawlingSeleniumGet() {
+    return "study/crawling/selenium";
+  }
+
+  // 크롤링하기(selenium)
+  @ResponseBody
+  @RequestMapping(value = "/crawling/selenium", method = RequestMethod.POST)
+  public List<HashMap<String, Object>> crawlingSeleniumPost(HttpServletRequest request) {
+    List<HashMap<String, Object>> array = new ArrayList<HashMap<String, Object>>();
+
+    try {
+      String realPath = request.getSession().getServletContext().getRealPath("/resources/crawling/");
+      System.setProperty("webdriver.chrome.driver", realPath + "chromedriver.exe");  
+      //https://googlechromelabs.github.io/chrome-for-testing/#stable에서 Version: 120.0.6099.109 (r1217362)의 chromedriver(win64) URL 드래그 후 크롬에 입력하면 다운받아짐
+
+
+      WebDriver driver = new ChromeDriver();
+      driver.get("http://www.cgv.co.kr/movies/");
+
+      /* ---------- 응용 실습 ------------------- */
+
+      // 현재 상영작만 보기 클릭처리
+      WebElement btnMore = driver.findElement(By.id("chk_nowshow"));
+      btnMore.click();
+
+
+      // 더보기 버튼을 클릭했을때 더 많은 영화목록 보여주기 처리..
+      btnMore = driver.findElement(By.className("link-more"));
+      btnMore.click();
+
+
+      // 화면이 더 열리는 동안 시간 지연시켜주기(3초)
+      try {
+        Thread.sleep(3000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+
+      // List로 처리해서 프론트로 넘겨주도록 하자.
+      List<WebElement> elements = driver.findElements(By.cssSelector(".sect-movie-chart ol li"));
+      for(WebElement element : elements){
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        String image="<img src='" + element.findElement(By.tagName("img")).getAttribute("src") + "' width='300px'  />";
+        String link =element.findElement(By.tagName("a")).getAttribute("href");
+        String title="<a href='"+link+"' target='_blank'>" + element.findElement(By.className("title")).getText() + "</a>";
+        String percent=element.findElement(By.className("percent")).getText();
+        map.put("title", title);
+        map.put("image", image);
+        map.put("link", link);
+        map.put("percent", percent);
+        array.add(map);
+      }
+
+    } catch (Exception e) {
+      System.out.println("CGV Crawling error : " + e.toString());
+    }
+    //System.out.println("array : " + array);
+    return array;
+  }
 }

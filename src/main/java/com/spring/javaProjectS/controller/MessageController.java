@@ -66,6 +66,15 @@ public class MessageController {
 			model.addAttribute("msg", "파일 업로드가 실패하였습니다.");
 			model.addAttribute("url", "study/fileUpload/fileUpload");
 		}
+		else if(msgFlag.equals("thumbnailOk")) {
+			model.addAttribute("msg", "썸네일 이미지가 생성되었습니다.");
+			model.addAttribute("url", "study/thumbnail/thumbnailForm");
+		}
+		else if(msgFlag.equals("thumbnailNo")) {
+			model.addAttribute("msg", "썸네일 이미지 생성이 실패하였습니다.");
+			model.addAttribute("url", "study/thumbnail/thumbnailForm");
+		}
+		
 		
 		//Guest
 		else if(msgFlag.equals("guestInputOk")) {

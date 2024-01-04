@@ -1,5 +1,10 @@
 package com.spring.javaProjectS.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,43 +70,41 @@ public class MemberController {
 			@RequestParam(name="pwd", defaultValue="1234", required=false) String pwd,
 			@RequestParam(name="idSave", defaultValue="", required=false) String idSave) {
 		
-			MemberVO vo = memberService.getMemberIdSearch(mid);
-			System.out.println("..1" + vo.getMid());
-			if(vo != null && vo.getUserDel().equals("NO") && passwordEncoder.matches(pwd, vo.getPwd())) {
-				//세션 저장
-				String sStrLevel = "";
-				if(vo.getLevel() == 0) sStrLevel = "관리자";
-				else if(vo.getLevel() == 1) sStrLevel = "우수회원";
-				else if(vo.getLevel() == 2) sStrLevel = "정회원";
-				else if(vo.getLevel() == 3) sStrLevel = "준회원";
-				
-				session.setAttribute("sMid", mid);
-				session.setAttribute("sNickName", vo.getNickName());
-				session.setAttribute("sLevel", vo.getLevel());
-				session.setAttribute("sStrLevel", sStrLevel);
-				System.out.println("..2" + vo.getMid());
-				//쿠키 저장/삭제
-				if(idSave.equals("on")) {
-					Cookie cookieMid = new Cookie("cMid", mid);
-					//cookieMid.setPath("/"); 스프링에서는 디폴트가 자신의 contextroot부터이기 때문에 생략 가능(jsp에선 생략하면 안돼)
-					cookieMid.setMaxAge(60*60*24*7);
-					response.addCookie(cookieMid);
-				}
-				else {
-					Cookie[] cookies = request.getCookies();
-					for(int i=0; i<cookies.length; i++) {
-						if(cookies[i].getName().equals("cMid")) {
-							cookies[i].setMaxAge(0);
-							response.addCookie(cookies[i]);
-							break;
-						}
-					}
-				}
-				return "redirect:/message/loginOk?mid="+mid;
+		MemberVO vo = memberService.getMemberIdSearch(mid);
+		if(vo != null && vo.getUserDel().equals("NO") && passwordEncoder.matches(pwd, vo.getPwd())) {
+			//세션 저장
+			String sStrLevel = "";
+			if(vo.getLevel() == 0) sStrLevel = "관리자";
+			else if(vo.getLevel() == 1) sStrLevel = "우수회원";
+			else if(vo.getLevel() == 2) sStrLevel = "정회원";
+			else if(vo.getLevel() == 3) sStrLevel = "준회원";
+			
+			session.setAttribute("sMid", mid);
+			session.setAttribute("sNickName", vo.getNickName());
+			session.setAttribute("sLevel", vo.getLevel());
+			session.setAttribute("sStrLevel", sStrLevel);
+			//쿠키 저장/삭제
+			if(idSave.equals("on")) {
+				Cookie cookieMid = new Cookie("cMid", mid);
+				//cookieMid.setPath("/"); 스프링에서는 디폴트가 자신의 contextroot부터이기 때문에 생략 가능(jsp에선 생략하면 안돼)
+				cookieMid.setMaxAge(60*60*24*7);
+				response.addCookie(cookieMid);
 			}
 			else {
-				return "redirect:/message/loginNo";
+				Cookie[] cookies = request.getCookies();
+				for(int i=0; i<cookies.length; i++) {
+					if(cookies[i].getName().equals("cMid")) {
+						cookies[i].setMaxAge(0);
+						response.addCookie(cookies[i]);
+						break;
+					}
+				}
 			}
+			return "redirect:/message/loginOk?mid="+mid;
+		}
+		else {
+			return "redirect:/message/loginNo";
+		}
 	}
 	
 	//회원 로그아웃
@@ -112,6 +115,89 @@ public class MemberController {
 		return "redirect:/message/logoutOk?mid="+mid;
 	}
 	
+	//카카오 로그인
+	@RequestMapping(value = "/kakaoLogin", method = RequestMethod.GET)
+	public String kakaoLoginGet(HttpSession session, 
+			HttpServletRequest request, HttpServletResponse response,
+			String nickName, String email, String accessToken) {
+	
+		//카카오 로그인한 회원이 회원 리스트에 있는지 확인 (이메일의 '@' 기준으로 앞 아이디 부분을 DB 정보와 비교)
+		MemberVO vo = memberService.getMemberKakaoLoginSearch(nickName, email);
+		
+		//카카오 로그인한 회원이 비회원이었다면, 자동으로 회원 가입 처리한다 (필수입력사항 : 아이디, 닉네임, 이메일) - 성명은 닉네임으로 처리
+		if(vo == null) {
+			//아이디 
+			String mid = email.substring(0, email.indexOf("@"));
+			
+			//기존에 같은 아이디가 있다면 가입할 수 없다
+			MemberVO vo2 = memberService.getMemberIdSearch(mid);
+			if(vo2 != null) return "redirect:/message/idCheckNo";
+			
+			//임시 비밀번호 발급 후 메일로 전송
+			UUID uid = UUID.randomUUID();
+			String pwd = uid.toString().substring(0,8);
+			session.setAttribute("sImsiPwd", pwd);
+			
+			//임시 비밀번호를 암호화
+			pwd = passwordEncoder.encode(pwd);
+			
+			//임시 비밀번호를 메일로 전송
+			
+			//위의 정보로 회원가입 처리
+			memberService.setKakaoMemberInput(mid, pwd, nickName, email);
+			
+			//회원 정보를 vo에 담아준다
+			vo = memberService.getMemberIdSearch(mid);
+		}	
+			
+		//세션 저장
+		String sStrLevel = "";
+		if(vo.getLevel() == 0) sStrLevel = "관리자";
+		else if(vo.getLevel() == 1) sStrLevel = "우수회원";
+		else if(vo.getLevel() == 2) sStrLevel = "정회원";
+		else if(vo.getLevel() == 3) sStrLevel = "준회원";
+		
+		session.setAttribute("sAccessToken", accessToken);
+		session.setAttribute("sMid", vo.getMid());
+		session.setAttribute("sNickName", vo.getNickName());
+		session.setAttribute("sLevel", vo.getLevel());
+		session.setAttribute("sStrLevel", sStrLevel);
+		
+		return "redirect:/message/loginOk?mid="+ vo.getMid();
+	}
+	
+	//카카오 로그아웃
+	@RequestMapping(value = "/kakaoLogout", method = RequestMethod.GET)
+	public String kakaoLogoutGet(HttpSession session) {
+		String mid = (String) session.getAttribute("sMid");
+		String accessToken = (String) session.getAttribute("sAccessToken");
+		
+		String requestUrl = "https://kapi.kakao.com/v1/user/unlink";
+		
+		try {	//커넥션 객체와 연관
+			URL url = new URL(requestUrl);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Authorization", "Bearer" + accessToken);
+			
+			//카카오에 정상 처리되면 responseCode 값은 200
+			int responseCode = conn.getResponseCode();
+			System.out.println("responseCode : " + responseCode);
+					
+			//정상 처리 후 카카오에서는 id를 보내준다. 아래 코드는 확인해보기 위해서 적어본다.
+      BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      String id = "", data = "";
+      while ((data = br.readLine()) != null) id += data;
+      System.out.println("id : " + id);
+      
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		session.invalidate();
+		return "redirect:/message/logoutOk?mid="+mid;
+	}
+
 	//로그인 후 메인창
 	@RequestMapping(value = "/memberMain", method = RequestMethod.GET)
 	public String memberMainGet() {

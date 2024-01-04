@@ -68,7 +68,7 @@
   <hr/>
   
 	<div id="map" style="width:100%;height:500px;"></div>
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=158c673636c9a17a27b67c95f2c6be5c"></script>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5277e19a72487035adae6349e84d6957"></script>
 	<script>
 		//주소로 장소 표시하기
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div(70번)
