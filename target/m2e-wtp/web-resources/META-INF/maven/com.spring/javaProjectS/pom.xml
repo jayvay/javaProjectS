@@ -269,7 +269,14 @@
 		    <artifactId>selenium-java</artifactId>
 		    <version>4.10.0</version>
 		</dependency>
-								
+			
+		<!-- 트랜잭션을 위한 라이브러리(스프링프레임워크 버전과 동일한 버전으로 써야 함) -->						
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-tx</artifactId>
+		    <version>4.3.14.RELEASE</version>
+		</dependency>
 		
 	</dependencies>
     <build>

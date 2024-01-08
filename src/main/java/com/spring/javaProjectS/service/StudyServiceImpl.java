@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +31,7 @@ import com.spring.javaProjectS.dao.User2DAO;
 import com.spring.javaProjectS.vo.Chart2VO;
 import com.spring.javaProjectS.vo.KakaoAddressVO;
 import com.spring.javaProjectS.vo.QrCodeVO;
+import com.spring.javaProjectS.vo.TransactionVO;
 import com.spring.javaProjectS.vo.UserVO;
 
 import net.coobird.thumbnailator.Thumbnailator;
@@ -408,6 +410,37 @@ public class StudyServiceImpl implements StudyService {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+	@Override
+	public List<TransactionVO> getTransactionList() {
+		return studyDAO.getTransactionList();
+	}
+	
+	@Override
+	public List<TransactionVO> getTransactionList2() {
+		return studyDAO.getTransactionList2();
+	}
+
+	@Override
+	public void setTransactionUser1Input(TransactionVO vo) {
+		studyDAO.setTransactionUser1Input(vo);
+	}
+	
+	@Override
+	public void setTransactionUser2Input(TransactionVO vo) {
+		studyDAO.setTransactionUser2Input(vo);
+	}
+	
+	@Transactional
+	@Override
+	public void setTransactionUserInput(TransactionVO vo) {
+		studyDAO.setTransactionUserInput(vo);
+	}
+
+	@Override
+	public void setTransactionUserInput2(String mid, String name, int age, String address, String job) {
+		studyDAO.setTransactionUserInput2(mid,name,age,address,job);
 	}
 	
 	

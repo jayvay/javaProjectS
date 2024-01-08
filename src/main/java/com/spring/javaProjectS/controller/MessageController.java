@@ -74,6 +74,10 @@ public class MessageController {
 			model.addAttribute("msg", "썸네일 이미지 생성이 실패하였습니다.");
 			model.addAttribute("url", "study/thumbnail/thumbnailForm");
 		}
+		else if(msgFlag.equals("validateNo")) {
+			model.addAttribute("msg", "백엔드 체크(validate) 오류");
+			model.addAttribute("url", "/");
+		}
 		
 		
 		//Guest
@@ -193,6 +197,16 @@ public class MessageController {
 		else if(msgFlag.equals("memberNo")) {
 			model.addAttribute("msg", "로그인 후 사용하세요.");
 			model.addAttribute("url", "member/login");
+		}
+		
+		//admin
+		else if(msgFlag.equals("dbProductInputOk")) {
+			model.addAttribute("msg", "상품이 등록되었습니다.");
+			model.addAttribute("url", "dbShop/dbShopList");
+		}
+		else if(msgFlag.equals("dbProductInputNo")) {
+			model.addAttribute("msg", "상품 등록을 실패하였습니다.");
+			model.addAttribute("url", "dbShop/dbProduct");
 		}
 		
 		

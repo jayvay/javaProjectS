@@ -66,6 +66,7 @@
 	        <a href="${ctp}/study/thumbnail/thumbnailForm" class="w3-bar-item w3-button">썸네일연습</a>
 	        <a href="${ctp}/study/crawling/jsoup" class="w3-bar-item w3-button">크롤링(jsoup)</a>
 	        <a href="${ctp}/study/crawling/selenium" class="w3-bar-item w3-button">크롤링(selenium)</a>
+	        <a href="${ctp}/study/transaction/transaction" class="w3-bar-item w3-button">트랜잭션연습</a>
 	        <a href="${ctp}/errorPage/errorMain" class="w3-bar-item w3-button">Error연습</a>
 	      </div>
 	    </div>
@@ -78,7 +79,7 @@
 		      <a href="${ctp}/member/memberUpdate" class="w3-bar-item w3-button">회원정보수정</a>
 		      <a href="javascript:memberDelete()" class="w3-bar-item w3-button">회원탈퇴</a>
 		      <c:if test="${sLevel == 0}">
-		      	<a href="#" class="w3-bar-item w3-button">관리자</a>
+		      	<a href="${ctp}/admin/adminMain" class="w3-bar-item w3-button">관리자</a>
 		      </c:if>
 	    	</div>
 	  	</div>

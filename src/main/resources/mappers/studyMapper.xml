@@ -28,4 +28,28 @@
   <select id="getQrCodeSearch" resultType="com.spring.javaProjectS.vo.QrCodeVO">
   	select * from qrCode where qrCodeName = #{qrCode};
   </select>
+  
+  <select id="getTransactionList" resultType="com.spring.javaProjectS.vo.TransactionVO">
+  	select * from user order by mid;
+  </select>
+  <select id="getTransactionList2" resultType="com.spring.javaProjectS.vo.TransactionVO">
+  	select * from user2 order by mid;
+  </select>
+  
+  <insert id="setTransactionUser1Input">
+  	insert into user values (default,#{vo.mid},#{vo.name},#{vo.age},#{vo.address});
+  </insert>
+  <insert id="setTransactionUser2Input">
+  	insert into user2 values (#{vo.mid},#{vo.job});
+  </insert>
+
+  <insert id="setTransactionUserInput">
+  	insert into user values (default,#{vo.mid},#{vo.name},#{vo.age},#{vo.address});
+  	insert into user2 values (#{vo.mid},#{vo.job});
+  </insert>
+  
+  <insert id="setTransactionUserInput2">
+  	insert into user values (default,#{mid},#{name},#{age},#{address});
+  	insert into user2 values (#{mid},#{job});
+  </insert>
 </mapper>
