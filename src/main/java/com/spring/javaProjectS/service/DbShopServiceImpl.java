@@ -209,5 +209,48 @@ public class DbShopServiceImpl implements DbShopService {
     fos.close();
   }
 
-	
+	@Override
+	public List<DbProductVO> getDbShopList(String part) {
+		return dbShopDAO.getDbShopList(part);
+	}
+
+	@Override
+	public List<DbProductVO> getSubTitle() {
+		return dbShopDAO.getSubTitle();
+	}
+
+	@Override
+	public DbProductVO getDbShopProduct(int idx) {
+		return dbShopDAO.getDbShopProduct(idx);
+	}
+
+	@Override
+	public List<DbProductVO> getCategoryProductList(String categoryMainCode, String categoryMiddleCode, String categorySubCode) {
+		return dbShopDAO.getCategoryProductList(categoryMainCode, categoryMiddleCode, categorySubCode);
+	}
+
+	@Override
+	public DbProductVO getProductInfor(String productName) {
+		return dbShopDAO.getProductInfor(productName);
+	}
+
+	@Override
+	public List<DbProductVO> getOptionList(int productIdx) {
+		return dbShopDAO.getOptionList(productIdx);
+	}
+
+	@Override
+	public int getOptionSearch(int productIdx, String optionName) {
+		return dbShopDAO.getOptionSearch(productIdx, optionName);
+	}
+
+	@Override
+	public int setDbOptionInput(DbProductVO vo) {
+		return dbShopDAO.setDbOptionInput(vo);
+	}
+
+	@Override
+	public List<DbProductVO> getDbShopOption(int idx) {
+		return dbShopDAO.getDbShopOption(idx);
+	}
 }

@@ -208,6 +208,14 @@ public class MessageController {
 			model.addAttribute("msg", "상품 등록을 실패하였습니다.");
 			model.addAttribute("url", "dbShop/dbProduct");
 		}
+		else if(msgFlag.equals("dbOptionInputOk")) {
+			model.addAttribute("msg", "옵션이 등록되었습니다.");
+			model.addAttribute("url", "dbShop/dbOption");
+		}
+		else if(msgFlag.equals("dbOptionInputNo")) {
+			model.addAttribute("msg", "옵션 등록을 실패하였습니다.");
+			model.addAttribute("url", "dbShop/dbOption");
+		}
 		
 		
 		return "include/message";

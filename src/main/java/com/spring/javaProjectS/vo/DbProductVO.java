@@ -18,4 +18,10 @@ public class DbProductVO {
 	private String categoryMiddleName;
 	private String categorySubCode;
 	private String categorySubName;
+	
+	private int opIdx;
+	private int productIdx;
+	private String optionName;
+	private int optionPrice;
+	
 }

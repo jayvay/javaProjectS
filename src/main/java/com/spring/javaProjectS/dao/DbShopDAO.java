@@ -40,6 +40,25 @@ public interface DbShopDAO {
 
 	public int setDbProductInput(@Param("vo") DbProductVO vo);
 
+	public List<DbProductVO> getDbShopList(@Param("part") String part);
+
+	public List<DbProductVO> getSubTitle();
+
+	public DbProductVO getDbShopProduct(@Param("idx") int idx);
+
+	public List<DbProductVO> getCategoryProductList(@Param("categoryMainCode") String categoryMainCode, @Param("categoryMiddleCode") String categoryMiddleCode,
+			@Param("categorySubCode") String categorySubCode);
+
+	public DbProductVO getProductInfor(@Param("productName") String productName);
+
+	public List<DbProductVO> getOptionList(@Param("productIdx") int productIdx);
+
+	public int getOptionSearch(@Param("productIdx") int productIdx, @Param("optionName") String optionName);
+
+	public int setDbOptionInput(@Param("vo") DbProductVO vo);
+
+	public List<DbProductVO> getDbShopOption(@Param("idx") int idx);
+
 	
 
 	

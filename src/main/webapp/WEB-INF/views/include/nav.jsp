@@ -71,6 +71,17 @@
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover">
+		    <button class="w3-padding-large w3-button" title="More">SHOP <i class="fa fa-caret-down"></i></button>     
+		    <div class="w3-dropdown-content w3-bar-block w3-card-4">
+		      <a href="${ctp}/dbShop/dbProductList" class="w3-bar-item w3-button">상품리스트</a>
+		      <a href="${ctp}/user2/user2List" class="w3-bar-item w3-button">장바구니</a>
+		      <a href="${ctp}/member/memberPwdCheck/p" class="w3-bar-item w3-button">주문/배송현황</a>
+		      <a href="${ctp}/member/memberUpdate" class="w3-bar-item w3-button">결제</a>
+		      <a href="javascript:memberDelete()" class="w3-bar-item w3-button">Q&A</a>
+		      <a href="javascript:memberDelete()" class="w3-bar-item w3-button">1:1문의</a>
+	    	</div>
+	  	</div>
+	    <div class="w3-dropdown-hover">
 		    <button class="w3-padding-large w3-button" title="More">MyPage <i class="fa fa-caret-down"></i></button>     
 		    <div class="w3-dropdown-content w3-bar-block w3-card-4">
 		      <a href="${ctp}/user/userList" class="w3-bar-item w3-button">일정관리</a>

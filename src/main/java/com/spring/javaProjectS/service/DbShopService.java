@@ -38,6 +38,24 @@ public interface DbShopService {
 
 	public int imgCheckProductInput(MultipartFile file, DbProductVO vo);
 
+	public List<DbProductVO> getDbShopList(String part);
+
+	public List<DbProductVO> getSubTitle();
+
+	public DbProductVO getDbShopProduct(int idx);
+
+	public List<DbProductVO> getCategoryProductList(String categoryMainCode, String categoryMiddleCode, String categorySubCode);
+
+	public DbProductVO getProductInfor(String productName);
+
+	public List<DbProductVO> getOptionList(int productIdx);
+
+	public int getOptionSearch(int productIdx, String optionName);
+
+	public int setDbOptionInput(DbProductVO vo);
+
+	public List<DbProductVO> getDbShopOption(int idx);
+
 
 
 }
