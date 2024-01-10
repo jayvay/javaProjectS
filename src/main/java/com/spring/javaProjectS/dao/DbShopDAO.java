@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.javaProjectS.vo.DbCartVO;
+import com.spring.javaProjectS.vo.DbOrderVO;
 import com.spring.javaProjectS.vo.DbProductVO;
 
 public interface DbShopDAO {
@@ -58,6 +60,20 @@ public interface DbShopDAO {
 	public int setDbOptionInput(@Param("vo") DbProductVO vo);
 
 	public List<DbProductVO> getDbShopOption(@Param("idx") int idx);
+
+	public DbCartVO getDbCartProductOptionSearch(@Param("productName") String productName, @Param("optionName") String optionName, @Param("mid") String mid);
+
+	public int dbShopCartUpdate(@Param("vo") DbCartVO vo);
+
+	public int dbShopCartInput(@Param("vo") DbCartVO vo);
+
+	public List<DbCartVO> getDbCartList(@Param("mid") String mid);
+
+	public int dbCartDelete(@Param("idx") int idx);
+
+	public DbOrderVO getOrderMaxIdx();
+
+	public DbCartVO getCartIdx(@Param("idx") int idx);
 
 	
 

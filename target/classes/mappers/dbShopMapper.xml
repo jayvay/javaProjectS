@@ -124,5 +124,31 @@
   	insert into dbOption values (default, #{vo.productIdx}, #{vo.optionName}, #{vo.optionPrice});
   </insert>
   
+	<select id="getDbCartProductOptionSearch" resultType="com.spring.javaProjectS.vo.DbCartVO">
+  	select * from dbCart where productName=#{productName} and optionName=#{optionName} and mid=#{mid};
+  </select>
   
+  <update id="dbShopCartUpdate">
+    update dbCart set optionNum=#{vo.optionNum},totalPrice=totalPrice+#{vo.totalPrice} where productName=#{vo.productName} and optionName=#{vo.optionName};
+  </update>
+  
+	<insert id="dbShopCartInput">
+    insert into dbCart values (default,default,#{vo.mid},#{vo.productIdx},#{vo.productName},#{vo.mainPrice},#{vo.thumbImg},#{vo.optionIdx},#{vo.optionName},#{vo.optionPrice},#{vo.optionNum},#{vo.totalPrice});
+  </insert>
+  
+	<select id="getDbCartList" resultType="com.spring.javaProjectS.vo.DbCartVO">
+  	select * from dbCart where mid=#{mid} order by idx;
+  </select>  
+  
+	<delete id="dbCartDelete">
+  	delete from dbCart where idx = #{idx};
+  </delete>
+  
+  <select id="getOrderMaxIdx" resultType="com.spring.javaProjectS.vo.DbOrderVO">
+  	select max(idx) as maxIdx from dbOrder;
+  </select>
+  
+	<select id="getCartIdx" resultType="com.spring.javaProjectS.vo.DbCartVO">
+  	select * from dbCart where idx = #{idx};
+  </select>
 </mapper>
