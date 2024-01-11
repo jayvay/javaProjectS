@@ -54,6 +54,7 @@ import com.spring.javaProjectS.common.ARIAUtil;
 import com.spring.javaProjectS.common.SecurityUtil;
 import com.spring.javaProjectS.service.StudyService;
 import com.spring.javaProjectS.vo.Chart2VO;
+import com.spring.javaProjectS.vo.DbPaymentVO;
 import com.spring.javaProjectS.vo.KakaoAddressVO;
 import com.spring.javaProjectS.vo.MailVO;
 import com.spring.javaProjectS.vo.QrCodeVO;
@@ -827,4 +828,26 @@ public class StudyController {
   	
   	return "redirect:/study/transaction/transaction";
   }
+  
+	//결제하기 폼
+	@RequestMapping(value = "/payment/payment", method = RequestMethod.GET)
+	public String paymentGet() {
+		return "study/payment/payment";
+	}
+
+	//결제중 폼
+	@RequestMapping(value = "/payment/payment", method = RequestMethod.POST)
+	public String paymentPost(HttpSession session, Model model, DbPaymentVO vo) {
+		session.setAttribute("sPaymentVO", vo);
+		model.addAttribute("vo", vo);
+		return "study/payment/sample";
+	}
+
+	//결제완료 폼
+	@RequestMapping(value = "/payment/paymentOk", method = RequestMethod.GET)
+	public String paymentOkGet(HttpSession session, Model model) {
+		DbPaymentVO vo = (DbPaymentVO) session.getAttribute("sPaymentVO");
+		model.addAttribute("vo", vo);
+		return "study/payment/paymentOk";
+	}
 }

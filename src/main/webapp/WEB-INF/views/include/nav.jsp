@@ -75,8 +75,8 @@
 		    <div class="w3-dropdown-content w3-bar-block w3-card-4">
 		      <a href="${ctp}/dbShop/dbProductList" class="w3-bar-item w3-button">상품리스트</a>
 		      <a href="${ctp}/dbShop/dbCartList" class="w3-bar-item w3-button">장바구니</a>
-		      <a href="${ctp}/member/memberPwdCheck/p" class="w3-bar-item w3-button">주문/배송현황</a>
-		      <a href="${ctp}/member/memberUpdate" class="w3-bar-item w3-button">결제</a>
+		      <a href="${ctp}/" class="w3-bar-item w3-button">주문/배송현황</a>
+		      <a href="${ctp}/study/payment/payment" class="w3-bar-item w3-button">결제</a>
 		      <a href="javascript:memberDelete()" class="w3-bar-item w3-button">Q&A</a>
 		      <a href="javascript:memberDelete()" class="w3-bar-item w3-button">1:1문의</a>
 	    	</div>

@@ -151,4 +151,28 @@
 	<select id="getCartIdx" resultType="com.spring.javaProjectS.vo.DbCartVO">
   	select * from dbCart where idx = #{idx};
   </select>
+  
+	<insert id="setDbOrder">
+    insert into dbOrder values (default,#{vo.orderIdx},#{vo.mid},#{vo.productIdx},default,#{vo.productName},#{vo.mainPrice},#{vo.thumbImg},#{vo.optionName},#{vo.optionPrice},#{vo.optionNum},#{vo.totalPrice});
+  </insert>
+  
+	<delete id="setDbCartDeleteAll">
+    delete from dbCart where idx = #{cartIdx};
+  </delete>
+
+	<insert id="setDbBaesong">
+    insert into dbBaesong values (default,#{baesongVO.oIdx},#{baesongVO.orderIdx},#{baesongVO.orderTotalPrice},#{baesongVO.mid},#{baesongVO.name},#{baesongVO.address},#{baesongVO.tel},#{baesongVO.message},#{baesongVO.payment},#{baesongVO.payMethod},default);
+  </insert>
+
+	<update id="setMemberPointPlus">
+    update member2 set point = point + #{point} where mid = #{mid};
+  </update>
+
+	<select id="getTotalBaesongOrder" resultType="int">
+    select orderTotalPrice from dbBaesong where orderIdx = #{orderIdx};
+  </select>
+  
+  <select id="getOrderBaesong" resultType="com.spring.javaProjectS.vo.DbBaesongVO">
+    select * from dbBaesong where orderIdx = #{orderIdx};
+  </select>
 </mapper>

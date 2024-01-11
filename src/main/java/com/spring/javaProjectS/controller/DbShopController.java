@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,8 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaProjectS.service.DbShopService;
 import com.spring.javaProjectS.service.MemberService;
+import com.spring.javaProjectS.vo.DbBaesongVO;
 import com.spring.javaProjectS.vo.DbCartVO;
 import com.spring.javaProjectS.vo.DbOrderVO;
+import com.spring.javaProjectS.vo.DbPaymentVO;
 import com.spring.javaProjectS.vo.DbProductVO;
 import com.spring.javaProjectS.vo.MemberVO;
 
@@ -359,51 +362,143 @@ public class DbShopController {
 		return res + "";
 	}
 	
-	//장바구니에서 '주문하기' 버튼 클릭해서 주문
+	//장바구니에서 '주문하기' 버튼을 클릭시에 처리할 부분
 	@RequestMapping(value="/dbCartList", method=RequestMethod.POST)
-	public String dbCartListPost(HttpSession session, HttpServletRequest request, Model model,
-			@RequestParam(name = "baesong", defaultValue = "0", required = false) int baesong) {
+	public String dbCartListPost(HttpServletRequest request, HttpSession session, Model model,
+			@RequestParam(name="baesong", defaultValue="0", required=false) int baesong) {
 		String mid = (String) session.getAttribute("sMid");
 		
-		//주문 고유번호를 만든다
+		// 주문한 상품에 대한 '고유번호'를 만들어준다.
 		DbOrderVO maxIdx = dbShopService.getOrderMaxIdx();
 		int idx = 1;
-    if(maxIdx != null) idx = maxIdx.getMaxIdx() + 1;
+		if(maxIdx != null) idx = maxIdx.getMaxIdx() + 1;
 
-    Date today = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-    String orderIdx = sdf.format(today) + idx;
-
-    //장바구니에서 구매를 위해 선택한 모든 항목들이 배열로 넘어온다
-    String[] idxChecked = request.getParameterValues("idxChecked");
-
-    DbCartVO cartVo = new DbCartVO();
-    List<DbOrderVO> orderVOS = new ArrayList<DbOrderVO>();
-    
-    for(String strIdx : idxChecked) {
-      cartVo = dbShopService.getCartIdx(Integer.parseInt(strIdx));
-      DbOrderVO orderVo = new DbOrderVO();
-      orderVo.setProductIdx(cartVo.getProductIdx());
-      orderVo.setProductName(cartVo.getProductName());
-      orderVo.setMainPrice(cartVo.getMainPrice());
-      orderVo.setThumbImg(cartVo.getThumbImg());
-      orderVo.setOptionName(cartVo.getOptionName());
-      orderVo.setOptionPrice(cartVo.getOptionPrice());
-      orderVo.setOptionNum(cartVo.getOptionNum());
-      orderVo.setTotalPrice(cartVo.getTotalPrice());
-      orderVo.setCartIdx(cartVo.getIdx());
-      orderVo.setBaesong(baesong);
-
-      orderVo.setOrderIdx(orderIdx); 
-      orderVo.setMid(mid);
-
-      orderVOS.add(orderVo);
-    }
-    session.setAttribute("sOrderVOS", orderVOS);
-    
-    //배송 처리를 위해 현재 로그인한 아이디에 해당하는 고객의 정보를 member2에서 가져온다
-    MemberVO memberVO = memberService.getMemberIdSearch(mid);
-    model.addAttribute("memberVO", memberVO);
+		Date today = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String orderIdx = sdf.format(today) + idx;
+		
+		// 장바구니에서 구매를 위해 선택한 모든 항목들은 배열로 넘어온다.
+		String[] idxChecked = request.getParameterValues("idxChecked");
+		
+		DbCartVO cartVo = new DbCartVO();
+		List<DbOrderVO> orderVOS = new ArrayList<DbOrderVO>();
+		 
+		for(String strIdx : idxChecked) {
+		  cartVo = dbShopService.getCartIdx(Integer.parseInt(strIdx));
+		  DbOrderVO orderVo = new DbOrderVO();
+		  orderVo.setProductIdx(cartVo.getProductIdx());
+		  orderVo.setProductName(cartVo.getProductName());
+		  orderVo.setMainPrice(cartVo.getMainPrice());
+		  orderVo.setThumbImg(cartVo.getThumbImg());
+		  orderVo.setOptionName(cartVo.getOptionName());
+		  orderVo.setOptionPrice(cartVo.getOptionPrice());
+		  orderVo.setOptionNum(cartVo.getOptionNum());
+		  orderVo.setTotalPrice(cartVo.getTotalPrice());
+		  orderVo.setCartIdx(cartVo.getIdx());
+		  orderVo.setBaesong(baesong);
+		
+		  orderVo.setOrderIdx(orderIdx); 
+		  orderVo.setMid(mid);
+		
+		  orderVOS.add(orderVo);
+		}
+		session.setAttribute("sOrderVOS", orderVOS);
+ 
+		// 배송처리를 위한 현재 로그인한 아이디에 해당하는 고객의 정보를 member2에서 가져온다.
+		MemberVO memberVO = memberService.getMemberIdSearch(mid);
+		model.addAttribute("memberVO", memberVO);
+		
 		return "dbShop/dbOrder";
 	}
+	
+	// 결제시스템(결제창 호출) - 결제 API이용
+	@RequestMapping(value="/payment", method=RequestMethod.POST)
+	public String paymentPost(DbOrderVO orderVo, DbPaymentVO paymentVO, DbBaesongVO baesongVO, HttpSession session, Model model) {
+		model.addAttribute("paymentVO", paymentVO);
+		
+		session.setAttribute("sPaymentVO", paymentVO);
+		session.setAttribute("sBaesongVO", baesongVO);
+		
+		return "dbShop/paymentOk";
+	}
+	
+	// 결제완료후 주문내역을 '주문테이블'에 저장처리한다. - 주문/결제된 물품은 장바구니에서 제거시켜준다. 사용한 세션은 제거시킨다.
+	@Transactional
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/paymentResult", method=RequestMethod.GET)
+	public String paymentResultGet(HttpSession session, DbPaymentVO receivePaymentVO, Model model) {
+		List<DbOrderVO> orderVOS = (List<DbOrderVO>) session.getAttribute("sOrderVOS");
+		DbPaymentVO paymentVO = (DbPaymentVO) session.getAttribute("sPaymentVO");
+		DbBaesongVO baesongVO = (DbBaesongVO) session.getAttribute("sBaesongVO");
+		
+		session.removeAttribute("sBaesongVO");
+		
+		for(DbOrderVO vo : orderVOS) {
+			vo.setIdx(Integer.parseInt(vo.getOrderIdx().substring(8)));	
+			vo.setOrderIdx(vo.getOrderIdx());
+			vo.setMid(vo.getMid());							
+			
+			dbShopService.setDbOrder(vo);		// 주문/결제 처리된 내용을 주문테이블(dbOrder)에 저장시킨다.
+			dbShopService.setDbCartDeleteAll(vo.getCartIdx());	// 주문이 완료되었기에 장바구니테이블에서 주문한 내역을 삭제한다.
+			
+		}
+		// 주문된 정보중 누락된 정보를 배송테이블에 담기위한 처리작업
+		baesongVO.setOIdx(orderVOS.get(0).getIdx());
+		baesongVO.setOrderIdx(orderVOS.get(0).getOrderIdx());
+		baesongVO.setAddress(paymentVO.getBuyer_addr());
+		baesongVO.setTel(paymentVO.getBuyer_tel());
+		
+		
+		int totalBaesongOrder = 0;
+		for(int i=0; i<orderVOS.size(); i++) {
+			totalBaesongOrder += orderVOS.get(i).getTotalPrice();
+		}
+		// 총 주문금액이 5만원 미만이면, 배송비를 3000원으로 추가시킨다.
+		if(totalBaesongOrder < 50000) baesongVO.setOrderTotalPrice(totalBaesongOrder + 3000);
+		else baesongVO.setOrderTotalPrice(totalBaesongOrder);
+		
+		dbShopService.setDbBaesong(baesongVO);	// 배송내역을 배송테이블(dbBaesong)에 저장한다.
+		dbShopService.setMemberPointPlus((int)(baesongVO.getOrderTotalPrice() * 0.01), orderVOS.get(0).getMid());
+		
+		paymentVO.setImp_uid(receivePaymentVO.getImp_uid());
+		paymentVO.setMerchant_uid(receivePaymentVO.getMerchant_uid());
+		paymentVO.setPaid_amount(receivePaymentVO.getPaid_amount());
+		paymentVO.setApply_num(receivePaymentVO.getApply_num());
+		
+		// 오늘 주문에 들어간 정보들을 확인해주기위해 다시 session에 담아서 넘겨주고 있다.
+		session.setAttribute("sPaymentVO", paymentVO);
+		session.setAttribute("orderTotalPrice", baesongVO.getOrderTotalPrice());
+		
+		return "redirect:/message/paymentResultOk";
+	}
+	
+	@SuppressWarnings({ "unchecked" })
+	@RequestMapping(value="/paymentResultOk", method=RequestMethod.GET)
+	public String paymentResultOkGet(HttpSession session, Model model) {
+		List<DbOrderVO> orderVOS = (List<DbOrderVO>) session.getAttribute("sOrderVOS");
+		model.addAttribute("orderVOS", orderVOS);
+		session.removeAttribute("sOrderVOS");
+		
+		int totalBaesongOrder = dbShopService.getTotalBaesongOrder(orderVOS.get(orderVOS.size()-1).getOrderIdx());
+		model.addAttribute("totalBaesongOrder", totalBaesongOrder);
+		
+		return "dbShop/paymentResult";
+	}
+	
+	@RequestMapping(value="/dbOrderBaesong", method=RequestMethod.GET)
+	public String dbOrderBaesongGet(String orderIdx, Model model) {
+		List<DbBaesongVO> vos = dbShopService.getOrderBaesong(orderIdx);
+		
+		DbBaesongVO vo = vos.get(0);
+		String payMethod = "";
+		if(vo.getPayment().substring(0,1).equals("C")) payMethod = "카드결제";
+		else payMethod = "은행(무통장)결제";
+		
+		model.addAttribute("payMethod", payMethod);
+		model.addAttribute("vo", vo);
+		
+		return "dbShop/dbOrderBaesong";
+	}
+	
+	
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.javaProjectS.vo.DbBaesongVO;
 import com.spring.javaProjectS.vo.DbCartVO;
 import com.spring.javaProjectS.vo.DbOrderVO;
 import com.spring.javaProjectS.vo.DbProductVO;
@@ -74,6 +75,18 @@ public interface DbShopDAO {
 	public DbOrderVO getOrderMaxIdx();
 
 	public DbCartVO getCartIdx(@Param("idx") int idx);
+
+	public void setDbOrder(@Param("vo") DbOrderVO vo);
+
+	public void setDbCartDeleteAll(@Param("cartIdx") int cartIdx);
+
+	public void setDbBaesong(@Param("baesongVO") DbBaesongVO baesongVO);
+
+	public void setMemberPointPlus(@Param("point") int point, @Param("mid") String mid);
+
+	public int getTotalBaesongOrder(@Param("orderIdx") String orderIdx);
+
+	public List<DbBaesongVO> getOrderBaesong(@Param("orderIdx") String orderIdx);
 
 	
 
