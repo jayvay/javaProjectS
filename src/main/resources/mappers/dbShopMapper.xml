@@ -70,7 +70,7 @@
 		delete from categorySub where categorySubCode = #{categorySubCode};
 	</delete>
 	
-	<select id="getProductMaxIdx" resultType="int">
+	<select id="getProductMaxIdx" resultType="com.spring.javaProjectS.vo.DbProductVO">
 		select * from dbProduct order by idx desc limit 1;	<!-- select max(*) 로 하면 null이면 0으로 오기 때문에 쓰면 안돼 -->
 	</select>
 	

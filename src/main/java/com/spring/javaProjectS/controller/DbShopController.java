@@ -311,6 +311,8 @@ public class DbShopController {
 	public String dbProductContentPost(DbCartVO vo, HttpSession session, String flag) {
 		String mid = (String) session.getAttribute("sMid");
 		DbCartVO resVo = dbShopService.getDbCartProductOptionSearch(vo.getProductName(), vo.getOptionName(), mid);
+		System.out.println("vo.getOptionIdx():" + vo.getOptionIdx());
+		
 		int res = 0;
 		if(resVo != null) {
 			String[] voOptionNums = vo.getOptionNum().split(",");
